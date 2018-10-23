@@ -17,6 +17,7 @@ def start():
 
 @app.route('/create', methods=['GET'])
 def create():
+	#just a dummy fucntion for now will not work, just 
 	res = count.delay()
 	result = res.get()
 	return jsonify(result)
