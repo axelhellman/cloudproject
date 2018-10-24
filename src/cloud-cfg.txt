@@ -1,18 +1,6 @@
 #cloud-config
 
-apt_update: true
-apt_upgrade: true
-packages:
- - python-pip
- - python-dev
- - build-essential
-byobu_default: system 
-
  runcmd:
  - echo "export PATH = $PATH:/usr/games" >> /home/ubuntu/.bashrc
  - source /home/ubuntu/.bashrc
- - apt-get -y update
- - cd /home/ubuntu/
- - git clone https://github.com/QTLaaS/QTLaaS.git
- - cd QTLaaS/ 
- - bash spark_deployment.yml
+ - echo "" > /home/ubuntu/.ssh/authorized_keys

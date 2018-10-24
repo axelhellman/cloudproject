@@ -10,9 +10,9 @@ from keystoneauth1 import session
 
 flavor = "ACCHT18.normal" 
 private_net = "SNIC 2018/10-30 Internal IPv4 Network"
-floating_ip_pool_name = None
+floating_ip_pool_name = None#"Public External IPv4 network"
 floating_ip = None
-image_name = "Ubuntu 16.04 LTS (Xenial Xerus) - latest" #If we gonna boot from a snapshot we have to change this
+image_name = "acc20-S-important" # acc20-SM-important
 
 loader = loading.get_plugin_loader('password')
 
@@ -61,6 +61,6 @@ while inst_status == 'BUILD':
     inst_status = instance.status
 
 print "Instance: "+ instance.name +" is in " + inst_status + "state"
-
+instance.add_floating_ip("")#insert floating ip
 
 
