@@ -1,0 +1,16 @@
+#cloud-config
+
+apt_update: true
+apt_upgrade: true
+packages:
+ - python-minimal
+
+write_files:
+  - path: /home/ubuntu/autoAnsibleNode.sh
+    content: |
+    	Contents of the file??? We can put it here once it's done instead of having to copy it using scp¿?¿?
+
+runcmd:
+ - sudo su
+ - chmod 777 autoAnsibleNode.sh
+ - ./autoAnsibleNode.sh
