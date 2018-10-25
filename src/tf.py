@@ -1,9 +1,15 @@
 from flask import Flask
 from celery import Celery
 from subprocess import call
-import sys, os
+import sys, os, time
 import json
 import re
+from os import environ as env
+
+from  novaclient import client
+import keystoneclient.v3.client as ksclient
+from keystoneauth1 import loading
+from keystoneauth1 import session
 #this is the argument for the broker
 #app = Celery('tasks', broker='pyamqp://guest@localhost//')
 app = Celery('tasks', backend='rpc://', broker='pyamqp://guest@localhost')
@@ -51,7 +57,7 @@ def createsparkworker():
     secgroups = ['default', 'kramstrom-lab1'] #add the security group we need to have for SparkMaster, SparkWorker and Ansible-Node
 
     print "Creating instance ... "
-    instance = nova.servers.create(name="vm1", image=image, flavor=flavor, userdata=userdata, nics=nics,security_groups=secgroups, key_name='axel_keypair_uu')
+    instance = nova.servers.create(name="sparktest-", image=image, flavor=flavor, userdata=userdata, nics=nics,security_groups=secgroups) #key_name='axel_keypair_uu')
     inst_status = instance.status
     print "waiting for 10 seconds.. "
     time.sleep(10)
@@ -63,7 +69,7 @@ def createsparkworker():
         inst_status = instance.status
 
     print "Instance: "+ instance.name +" is in " + inst_status + "state"
-    instance.add_floating_ip("")#insert floating ip
+    #instance.add_floating_ip("")#insert floating ip
 
 
 
