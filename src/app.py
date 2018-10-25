@@ -17,6 +17,10 @@ def start():
 
 @app.route('/create', methods=['POST'])
 def create():
+	master = request.form['master']
+	worker = request.form['worker']
+	amount = request.form['amountOfWorkers']
+	print master + " " + worker + " " + amount
     #user_message = "Starting your cluster... hold on :)"
     #render_template("home.html")
     res = createsparkworker.delay()

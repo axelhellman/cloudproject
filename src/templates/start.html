@@ -11,8 +11,17 @@
     <p> Starting qtl platfrom</p>
     <p>How many workers do you want to have?</p>
     <p>Press start to set up the QTL-platfrom</p>
-    <form action = "/create/" method = "post">
-      <button name="start" type="submit" >Start QTL</button>
+    <form action = "{{ url_for('create') }}" method = "post">
+      <input type="checkbox" name="master" value="master"> Master
+      <input type="checkbox" worker="worker" value="worker"> Worker <br \>
+      <input
+        type="text"
+        name="amountOfWorkers"
+        placeholder="Enter amount of workers"
+        maxlength="1"
+        style="width:140px"
+      >
+      <button name="start" type="submit" value="submit">Start QTL</button>
     </form>
     {% endblock %}
   </body>
