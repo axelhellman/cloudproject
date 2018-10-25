@@ -1,5 +1,6 @@
 from flask import Flask
 from celery import Celery
+from subprocess import call
 import sys, os
 import json
 import re
@@ -7,6 +8,10 @@ import re
 #app = Celery('tasks', broker='pyamqp://guest@localhost//')
 app = Celery('tasks', backend='rpc://', broker='pyamqp://guest@localhost')
 
+@app.task
+def createsparkworker():
+    result=call('python ssc-instance-userdata.py')
+    return(result)
 
 @app.task
 def count():

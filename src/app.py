@@ -1,6 +1,6 @@
 #!flask/bin/python
 from flask import Flask, jsonify, render_template
-from tf import count
+from tf import count, createsparkworker
 import subprocess
 import sys
 
@@ -17,10 +17,13 @@ def start():
 
 @app.route('/create', methods=['GET'])
 def create():
-	#just a dummy fucntion for now will not work, just 
-	res = count.delay()
-	result = res.get()
+	res = createsparkworker.delay()
+	result.get()
 	return jsonify(result)
+	
+	#res = count.delay()
+	#result = res.get()
+	#return jsonify(result)
 
 
 @app.route('/resize', methods=['GET','POST'])
