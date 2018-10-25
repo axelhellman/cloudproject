@@ -10,21 +10,16 @@
     <h1> Start QTL </h1>
     <p> Starting qtl platfrom</p>
     <p>How many workers do you want to have?</p>
-    <form action = "http://localhost:5000/start" method = "post">
     <p>Press start to set up the QTL-platfrom</p>
-    <button type="button", name="Start">Start QTL</button>
+    <form action = "/create/" method = "post">
+      <button name="start" type="submit" >Start QTL</button>
     </form>
     {% endblock %}
   </body>
 </html>
 
 
-
-
-
-
-
-<!--onclick="alert('Hello world!')" 
+<!--onclick="alert('Hello world!')"
     <input type="radio" name="Amount of workers" value="1"><br>1</b>
     <input type="radio" name="Amount of workers" value="2"><br>2</b>
     <input type="radio" name="Amount of workers" value="3"><br>3</b>

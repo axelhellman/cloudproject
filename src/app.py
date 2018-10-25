@@ -19,12 +19,13 @@ def start():
 def create():
 	res = createsparkworker.delay()
 	result.get()
+	user_message = "Starting your cluster... hold on :)"
+	render_template("home.html", user_message)
 	return jsonify(result)
-	
+
 	#res = count.delay()
 	#result = res.get()
 	#return jsonify(result)
-
 
 @app.route('/resize', methods=['GET','POST'])
 def resize():
@@ -37,4 +38,3 @@ def remove():
 
 if __name__ == '__main__':
         app.run(host='0.0.0.0',debug=False)
-
