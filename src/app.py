@@ -15,17 +15,21 @@ def home():
 def start():
 	return render_template("start.html")
 
-@app.route('/create', methods=['GET'])
+@app.route('/create', methods=['POST'])
 def create():
-	res = createsparkworker.delay()
-	result.get()
-	user_message = "Starting your cluster... hold on :)"
-	render_template("home.html", user_message)
-	return jsonify(result)
+    #user_message = "Starting your cluster... hold on :)"
+    #render_template("home.html")
+    res = createsparkworker.delay()
+    result=res.get()
+    #user_message = "Starting your cluster... hold on :)"
+    #return render_template("start.html") #, user_message)
+    return jsonify(result)
 
-	#res = count.delay()
-	#result = res.get()
-	#return jsonify(result)
+    #res = count.delay()
+    #result = res.get()
+    #return jsonify(result)
+
+
 
 @app.route('/resize', methods=['GET','POST'])
 def resize():
