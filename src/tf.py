@@ -21,15 +21,16 @@ def createspark(SM, SW):
     if SM == True:
         image_name = "acc20-S-important" # acc20-SM-important
         name = "acc20-sparkmaster"
-        createinstance(image_name,name)
+        createinstance(image_name,name,True)
+
     while i <= SW:
         image_name = "acc20-SM-important"
         name = "acc20-sparkworker"+str(i)
-        createinstance(image_name,name)
+        createinstance(image_name,name, False)
         i+=1
 
 
-def createinstance(image_name, name):
+def createinstance(image_name, name, assign_fip):
     flavor = "ACCHT18.normal" 
     private_net = "SNIC 2018/10-30 Internal IPv4 Network"
     floating_ip_pool_name = None #"Public External IPv4 network"
@@ -81,6 +82,8 @@ def createinstance(image_name, name):
         inst_status = instance.status
 
     return "Instance: "+ instance.name +" is in " + inst_status + "state"
-    #instance.add_floating_ip("")#insert floating ip
+    
+    #if assign_fip == True:
+    #    instance.add_floating_ip("")#insert floating ip
 
 
