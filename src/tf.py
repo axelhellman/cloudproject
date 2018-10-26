@@ -16,22 +16,22 @@ app = Celery('tasks', backend='rpc://', broker='pyamqp://guest@localhost')
 
 @app.task
 def createspark(SM, SW):
-    
+
     i=1
     if SM == True:
-        image_name = "acc20-S-important" # acc20-SM-important
+        image_name = "acc20-SM-important" # acc20-SM-important
         name = "acc20-sparkmaster"
         createinstance(image_name,name,True)
 
     while i <= SW:
-        image_name = "acc20-SM-important"
+        image_name = "acc20-S-important"
         name = "acc20-sparkworker"+str(i)
         createinstance(image_name,name, False)
         i+=1
 
 
 def createinstance(image_name, name, assign_fip):
-    flavor = "ACCHT18.normal" 
+    flavor = "ACCHT18.normal"
     private_net = "SNIC 2018/10-30 Internal IPv4 Network"
     floating_ip_pool_name = None #"Public External IPv4 network"
     floating_ip = None
@@ -82,8 +82,6 @@ def createinstance(image_name, name, assign_fip):
         inst_status = instance.status
 
     return "Instance: "+ instance.name +" is in " + inst_status + "state"
-    
+
     #if assign_fip == True:
     #    instance.add_floating_ip("")#insert floating ip
-
-
