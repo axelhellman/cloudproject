@@ -13,12 +13,13 @@ from keystoneauth1 import session
 #this is the argument for the broker
 #app = Celery('tasks', broker='pyamqp://guest@localhost//')
 app = Celery('tasks', backend='rpc://', broker='pyamqp://guest@localhost')
-amount_of_workers = 0
-startcluster=False
+#amount_of_workers = 0
+#startcluster=False
 @app.task
-def resizespark(SW):
+def resizespark(SW, CW):
     SW=int(SW)
-    diff = amount_of_workers-SW
+    CW=int(CW)
+    diff = SW-CW
     if diff==0:
         print("You already have that amount fo workers")
     elif diff>0:
@@ -34,9 +35,8 @@ def resizespark(SW):
         print("Remove workers")
     
 @app.task
-def createspark(SM, SW):
+def createspark(SM, SW, startcluster):
     if (startcluster==False):
-        startcluster=True
         SW=int(SW)
         amount_of_workers=SW
         i=1
