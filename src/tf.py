@@ -36,6 +36,7 @@ def resizespark(SW):
 @app.task
 def createspark(SM, SW):
     if (startcluster==False):
+        startcluster=True
         SW=int(SW)
         amount_of_workers=SW
         i=1
