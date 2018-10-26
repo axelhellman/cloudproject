@@ -10,28 +10,28 @@ app = Flask(__name__)
 def home():
         return render_template("home.html")
 
-@app.route('/create//<mess>', methods=['POST'])
+@app.route('/create', methods=['POST'])
 def create():
         amount = request.form['amount-workers']
-        mess = "Starting your cluster with " + amount + " workers..."
-        print mess
+        user_mess = "Starting your cluster with " + amount + " workers..."
+        print user_mess
         res = createspark.delay(True,amount)
         result=res.get()
-        render_template("home.html", message=mess)
+        render_template("home.html", message=user_mess)
         return jsonify(result)
 
 @app.route('/resize', methods=['POST'])
 def resize():
 		amount = request.form['new-amount-workers']
-		mess = "Resizing your cluster with" + amount + " workers..."
-		print mess
-		render_template("home.html", message=mess)
-        return render_template("home.html", message = mess)
+		user_mess = "Resizing your cluster with" + amount + " workers..."
+		print user_mess
+		render_template("home.html", message=user_mess)
+        return render_template("home.html", message=user_mess)
 
 @app.route('/remove', methods=['POST'])
 def remove():
-		mess = "Removes your cluster..."
-		print mess
+		user_mess = "Removes your cluster..."
+		print user_mess
         return render_template("home.html")
 
 
