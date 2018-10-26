@@ -15,12 +15,15 @@ from keystoneauth1 import session
 app = Celery('tasks', backend='rpc://', broker='pyamqp://guest@localhost')
 
 @app.task
-def createsparkworker():
+def createsparkworker(SM, SW):
     flavor = "ACCHT18.normal" 
     private_net = "SNIC 2018/10-30 Internal IPv4 Network"
     floating_ip_pool_name = None #"Public External IPv4 network"
     floating_ip = None
-    image_name = "acc20-S-important" # acc20-SM-important
+    if SM == True:
+        image_name = "acc20-S-important" # acc20-SM-important
+    elif SW == False:
+        image_name = "acc20-SM-important"
 
     loader = loading.get_plugin_loader('password')
 
@@ -70,4 +73,5 @@ def createsparkworker():
 
     print "Instance: "+ instance.name +" is in " + inst_status + "state"
     #instance.add_floating_ip("")#insert floating ip
+
 

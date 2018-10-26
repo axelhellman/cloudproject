@@ -30,14 +30,14 @@ export OS_USERNAME="s11765"
 
 # With Keystone you pass the keystone password.
 echo "Please enter your OpenStack Password for project $OS_PROJECT_NAME as user $OS_USERNAME: "
-read -sr OS_PASSWORD_INPUT
-export OS_PASSWORD=$OS_PASSWORD_INPUT
+#read -sr OS_PASSWORD_INPUT
+export OS_PASSWORD="DcEd2omy23ADS"
 
 # If your configuration has multiple regions, we set that information here.
 # OS_REGION_NAME is optional and only valid in certain environments.
 export OS_REGION_NAME="UPPMAX"
 # Don't leave a blank variable, unset it if it was empty
-if [ -z "$OS_REGION_NAME" ]; then unset OS_REGION_NAME; fi
+#if [ -z "$OS_REGION_NAME" ]; then unset OS_REGION_NAME; fi
 
 export OS_INTERFACE=public
 export OS_IDENTITY_API_VERSION=3
