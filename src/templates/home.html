@@ -8,18 +8,30 @@
         </script>
   </head>
   <body>
+
     <h1> Welcome! What do you want to do?</h1>
     <br />
+
     <h3>Start cluster</h3>
-        <form id="theForm" action="{{ url_for('create') }}" method="post">
-                <input type"text" name="amount-workers" maxlength="1" placeholder="Amount of workers">
+        <form action="{{ url_for('create') }}" method="post">
+                <input type"text" name="amount-workers" maxlength="1" placeholder="Amount of workers...">
                 <input type="submit">
         </form>
         <br />
+
     <h3>Resize cluster</h3>
+      <form action="{{ url_for('resize') }}" method="post">
+              <input type"text" name="-new-amount-workers" maxlength="1" placeholder="New amount of workers...">
+              <input type="submit">
+      </form>
         <br />
+
     <h3>Remove cluster</h3>
+        <form action="{{ url_for('remove') }}" method="post">
+            <button type="submit" name="remove">Remove</button>
+        </form>
         <br />
+
     <h2>Output</h2>
     {{ user_mess }}
   </body>
