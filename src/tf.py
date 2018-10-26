@@ -16,7 +16,7 @@ app = Celery('tasks', backend='rpc://', broker='pyamqp://guest@localhost')
 
 @app.task
 def createspark(SM, SW):
-    
+    SW=int(SW)
     i=1
     if SM == True:
         image_name = "acc20-S-important" # acc20-SM-important
