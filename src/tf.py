@@ -17,23 +17,25 @@ app = Celery('tasks', backend='rpc://', broker='pyamqp://guest@localhost')
 @app.task
 def createspark(SM, SW):
     
-    #flavor = "ACCHT18.normal" 
-    #private_net = "SNIC 2018/10-30 Internal IPv4 Network"
-    #floating_ip_pool_name = None #"Public External IPv4 network"
-    #floating_ip = None
+    i=1
     if SM == True:
         image_name = "acc20-S-important" # acc20-SM-important
-        createinstance(image_name)
-    elif SW == True:
+        name = sparkmaster
+        createinstance(image_name,name)
+    while i <= SW:
         image_name = "acc20-SM-important"
-        createinstance(image_name)
+        name = "sparkworker"+str(i)
+        createinstance(image_name,name)
+        i+=1
 
-def createinstance(image_name):
-    loader = loading.get_plugin_loader('password')
+
+def createinstance(image_name, name):
     flavor = "ACCHT18.normal" 
     private_net = "SNIC 2018/10-30 Internal IPv4 Network"
     floating_ip_pool_name = None #"Public External IPv4 network"
     floating_ip = None
+
+    loader = loading.get_plugin_loader('password')
     auth = loader.load_from_options(auth_url=env['OS_AUTH_URL'],
         username=env['OS_USERNAME'],
         password=env['OS_PASSWORD'],
@@ -67,7 +69,7 @@ def createinstance(image_name):
     secgroups = ['default', 'kramstrom-lab1'] #add the security group we need to have for SparkMaster, SparkWorker and Ansible-Node
 
     print "Creating instance ... "
-    instance = nova.servers.create(name="sparktest-", image=image, flavor=flavor, userdata=userdata, nics=nics,security_groups=secgroups) #key_name='axel_keypair_uu')
+    instance = nova.servers.create(name="", image=image, flavor=flavor, userdata=userdata, nics=nics,security_groups=secgroups) #key_name='axel_keypair_uu')
     inst_status = instance.status
     print "waiting for 10 seconds.. "
     time.sleep(10)
