@@ -1,43 +1,32 @@
 #!flask/bin/python
-from flask import Flask, jsonify, render_template
-from tf import createspark
+from flask import Flask, jsonify, render_template, request
+from tf import createsparkworker
 import subprocess
 import sys
 
 app = Flask(__name__)
 
-
 @app.route('/', methods=['GET'])
 def home():
-	return render_template("home.html")
-
-@app.route('/start', methods=['GET','POST'])
-def start():
-	return render_template("start.html")
+        return render_template("home.html")
 
 @app.route('/create', methods=['POST'])
 def create():
-    #user_message = "Starting your cluster... hold on :)"
-    #render_template("home.html")
-    res = createspark.delay(True,2)
-    result=res.get()
-    #user_message = "Starting your cluster... hold on :)"
-    #return render_template("start.html") #, user_message)
-    return jsonify(result)
-
-    #res = count.delay()
-    #result = res.get()
-    #return jsonify(result)
-
-
+        amount = request.form['amount-workers']
+        user_mess = "Starting your cluster with " + amount + " workers..."
+        print user_mess
+        res = createspark.delay(True,amount)
+        result=res.get()
+        render_template("home.html", message=user_mess)
+        return jsonify(result)
 
 @app.route('/resize', methods=['GET','POST'])
 def resize():
-	return render_template("resize.html")
+        return render_template("resize.html")
 
 @app.route('/remove', methods=['GET','POST'])
 def remove():
-	return render_template("remove.html")
+        return render_template("remove.html")
 
 
 if __name__ == '__main__':
