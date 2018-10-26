@@ -14,14 +14,14 @@
 
     <h3>Start cluster</h3>
         <form action="{{ url_for('create') }}" method="post">
-                <input type"text" name="amount-workers" maxlength="1" placeholder="Amount of workers...">
+                <input type"number" name="amount-workers" maxlength="1" placeholder="Amount of workers...">
                 <button type="submit">Start cluster</button>
         </form>
         <br />
 
     <h3>Resize cluster</h3>
       <form action="{{ url_for('resize') }}" method="post">
-              <input type"text" name="-new-amount-workers" maxlength="1" placeholder="New amount of workers...">
+              <input type"number" name="new-amount-workers" maxlength="1" placeholder="New amount of workers...">
               <button type="submit">Resize yao</button>
       </form>
         <br />
