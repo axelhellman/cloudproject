@@ -20,11 +20,11 @@ def createspark(SM, SW):
     i=1
     if SM == True:
         image_name = "acc20-S-important" # acc20-SM-important
-        name = sparkmaster
+        name = "acc20-sparkmaster"
         createinstance(image_name,name)
     while i <= SW:
         image_name = "acc20-SM-important"
-        name = "sparkworker"+str(i)
+        name = "acc20-sparkworker"+str(i)
         createinstance(image_name,name)
         i+=1
 
@@ -69,7 +69,7 @@ def createinstance(image_name, name):
     secgroups = ['default', 'kramstrom-lab1'] #add the security group we need to have for SparkMaster, SparkWorker and Ansible-Node
 
     print "Creating instance ... "
-    instance = nova.servers.create(name="", image=image, flavor=flavor, userdata=userdata, nics=nics,security_groups=secgroups) #key_name='axel_keypair_uu')
+    instance = nova.servers.create(name=name, image=image, flavor=flavor, userdata=userdata, nics=nics,security_groups=secgroups) #key_name='axel_keypair_uu')
     inst_status = instance.status
     print "waiting for 10 seconds.. "
     time.sleep(10)

@@ -19,7 +19,7 @@ def start():
 def create():
     #user_message = "Starting your cluster... hold on :)"
     #render_template("home.html")
-    res = createspark.delay(True,True)
+    res = createspark.delay(True,2)
     result=res.get()
     #user_message = "Starting your cluster... hold on :)"
     #return render_template("start.html") #, user_message)
