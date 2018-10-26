@@ -13,21 +13,44 @@ from keystoneauth1 import session
 #this is the argument for the broker
 #app = Celery('tasks', broker='pyamqp://guest@localhost//')
 app = Celery('tasks', backend='rpc://', broker='pyamqp://guest@localhost')
-
+amount_of_workers = 0
+startcluster=False
+@app.task
+def resizespark(SW):
+    SW=int(SW)
+    diff = amount_of_workers-SW
+    if diff==0:
+        print("You already have that amount fo workers")
+    elif diff>0:
+        #adding workers
+        while amount_of_workers <= SW:
+            image_name = "acc20-S-important"
+            name = "acc20-sparkworker"+str(amount_of_workers)
+            createinstance(image_name,name, False)
+            amount_of_workers+=1
+        
+    elif diff<0:
+        #removing workers
+        print("Remove workers")
+    
 @app.task
 def createspark(SM, SW):
-    SW=int(SW)
-    i=1
-    if SM == True:
-        image_name = "acc20-SM-important" # acc20-SM-important
-        name = "acc20-sparkmaster"
-        createinstance(image_name,name,True)
+    if (startcluster==False):
+        SW=int(SW)
+        amount_of_workers=SW
+        i=1
+        if SM == True:
+            image_name = "acc20-SM-important" # acc20-SM-important
+            name = "acc20-sparkmaster"
+            createinstance(image_name,name,True)
 
-    while i <= SW:
-        image_name = "acc20-S-important"
-        name = "acc20-sparkworker"+str(i)
-        createinstance(image_name,name, False)
-        i+=1
+        while i <= SW:
+            image_name = "acc20-S-important"
+            name = "acc20-sparkworker"+str(i)
+            createinstance(image_name,name, False)
+            i+=1
+        else: 
+            print("There is already a cluster running, you can either resize or decomission the cluster")
 
 
 def createinstance(image_name, name, assign_fip):
