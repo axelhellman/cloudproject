@@ -14,7 +14,7 @@
 
     <h3>Start cluster</h3>
         <form action="{{ url_for('create') }}" method="post">
-                <input type"number" name="amount-workers" maxlength="1" placeholder="Amount of workers...">
+                <input type"number" name="amount-workers" min="0" max="9" placeholder="Amount of workers...">
                 <button type="submit">Start cluster</button>
         </form>
         <br />

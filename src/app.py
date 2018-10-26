@@ -20,13 +20,19 @@ def create():
         render_template("home.html", message=user_mess)
         return jsonify(result)
 
-@app.route('/resize', methods=['GET','POST'])
+@app.route('/resize', methods=['POST'])
 def resize():
-        return render_template("resize.html")
+		amount = request.form['new-amount-workers']
+		user_mess = "Resizing your cluster with" + amount + " workers..."
+		print user_mess
+		render_template("home.html", message=user_mess)
+        return render_template("home.html", message=user_mess)
 
-@app.route('/remove', methods=['GET','POST'])
+@app.route('/remove', methods=['POST'])
 def remove():
-        return render_template("remove.html")
+		user_mess = "Removes your cluster..."
+		print user_mess
+        return render_template("home.html")
 
 
 if __name__ == '__main__':
