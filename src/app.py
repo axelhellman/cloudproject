@@ -1,6 +1,6 @@
 #!flask/bin/python
 from flask import Flask, jsonify, render_template
-from tf import count, createsparkworker
+from tf import createsparkworker
 import subprocess
 import sys
 
