@@ -4,3 +4,4 @@
  - echo "export PATH = $PATH:/usr/games" >> /home/ubuntu/.bashrc
  - source /home/ubuntu/.bashrc
  - echo "" > /home/ubuntu/.ssh/authorized_keys
+ - sudo chmod 777 /etc/hosts
