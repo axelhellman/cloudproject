@@ -11,7 +11,7 @@
 read -p "Use last IP? " -r
 if [[ $REPLY =~ ^[Nn]$ ]]; then
 
-	rm ~/.ssh/known_hosts
+	# rm ~/.ssh/known_hosts
 
 	# New floating IP
 	read -p "Floating IP: " floating

@@ -1,6 +1,8 @@
+#!/bin/bash
+
 nameA='ACC20-A-important'
-nameSM='ACC20-SM-important'
-nameSW='ACC20-S-important'
+nameSM='acc20-sparkmaster'
+nameSW='acc20-sparkworker1'
 
 source openrc.sh
 
@@ -30,7 +32,6 @@ rm serverlist
 
 # /etc/hosts For all nodes
 echo "127.0.0.1 localhost
-
 $privA ansible-node
 $privSW sparkworker1
 $privSM sparkmaster
@@ -43,12 +44,12 @@ ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 ff02::3 ip6-allhosts" > exampleHostFile
 
-mv exampleHostFile /etc/hosts
+sudo cp exampleHostFile /etc/hosts
 echo "Written to local /etc/hosts file"
 
-scp exampleHostFile ubuntu@$floatingSM:/etc/hosts
-scp exampleHostFile ubuntu@$floatingSW:/etc/hosts
-echo "Written to remote /etc/hosts files (SM and SW)"
+# scp exampleHostFile ubuntu@$floatingSM:/etc/hosts
+# scp exampleHostFile ubuntu@$floatingSW:/etc/hosts
+# echo "Written to remote /etc/hosts files (SM and SW)"
 
 # /etc/ansible/hosts only for ansible node
 echo "ansible-node ansible_ssh_host=$privA
@@ -64,7 +65,7 @@ sparkmaster ansible_connection=ssh ansible_user=ubuntu
 [sparkworker]
 sparkworker1 ansible_connection=ssh ansible_user=ubuntu" > exampleAnsibleHostsFile
 
-mv exampleAnsibleHostsFile /etc/ansible/hosts
+sudo cp exampleAnsibleHostsFile /etc/ansible/hosts
 echo "Written to local /etc/ansible/hosts file"
 
 
