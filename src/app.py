@@ -1,6 +1,6 @@
 #!flask/bin/python
 from flask import Flask, jsonify, render_template, request
-from tf import createspark
+from tf import createspark, resizespark
 import subprocess
 import sys
 
@@ -25,6 +25,8 @@ def resize():
 		amount = request.form['new-amount-workers']
 		user_mess = "Resizing your cluster with" + amount + " workers..."
 		print user_mess
+        res = resizespark.delay(amount)
+        result=res.get()
 		render_template("home.html", message=user_mess)
         return render_template("home.html", message=user_mess)
 
