@@ -46,9 +46,9 @@ ff02::3 ip6-allhosts" > exampleHostFile
 mv exampleHostFile /etc/hosts
 echo "Written to local /etc/hosts file"
 
-#this should overwrite the host file, just paste it there for now
-#scp exampleHostFile ubuntu@$floatingSM:/home/ubuntu/
-#scp exampleHostFile ubuntu@$floatingSW:/home/ubuntu/
+scp exampleHostFile ubuntu@$floatingSM:/etc/hosts
+scp exampleHostFile ubuntu@$floatingSW:/etc/hosts
+echo "Written to remote /etc/hosts files (SM and SW)"
 
 # /etc/ansible/hosts only for ansible node
 echo "ansible-node ansible_ssh_host=$privA
@@ -71,9 +71,7 @@ echo "Written to local /etc/ansible/hosts file"
 
 
 
-###########################
-
-# Manually get the floating IPs
+############ Manually get the floating IPs ###############
 
 # read -p "Ansible Master Floating IP: " floatingAM
 # read -p "Spark Master Floating IP: " floatingSM
