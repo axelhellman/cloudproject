@@ -17,20 +17,23 @@ app = Celery('tasks', backend='rpc://', broker='pyamqp://guest@localhost')
 @app.task
 def createspark(SM, SW):
     
+    #flavor = "ACCHT18.normal" 
+    #private_net = "SNIC 2018/10-30 Internal IPv4 Network"
+    #floating_ip_pool_name = None #"Public External IPv4 network"
+    #floating_ip = None
+    if SM == True:
+        image_name = "acc20-S-important" # acc20-SM-important
+        createinstance(image_name)
+    elif SW == True:
+        image_name = "acc20-SM-important"
+        createinstance(image_name)
+
+def createinstance(image_name):
+    loader = loading.get_plugin_loader('password')
     flavor = "ACCHT18.normal" 
     private_net = "SNIC 2018/10-30 Internal IPv4 Network"
     floating_ip_pool_name = None #"Public External IPv4 network"
     floating_ip = None
-    if SM == True:
-        image_name = "acc20-S-important" # acc20-SM-important
-        createinstance()
-    elif SW == True:
-        image_name = "acc20-SM-important"
-        createinstance()
-
-def createinstance():
-    loader = loading.get_plugin_loader('password')
-
     auth = loader.load_from_options(auth_url=env['OS_AUTH_URL'],
         username=env['OS_USERNAME'],
         password=env['OS_PASSWORD'],
