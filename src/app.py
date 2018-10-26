@@ -1,6 +1,6 @@
 #!flask/bin/python
 from flask import Flask, jsonify, render_template
-from tf import createsparkworker
+from tf import createspark
 import subprocess
 import sys
 
@@ -19,7 +19,7 @@ def start():
 def create():
     #user_message = "Starting your cluster... hold on :)"
     #render_template("home.html")
-    res = createsparkworker.delay()
+    res = createspark.delay(True,True)
     result=res.get()
     #user_message = "Starting your cluster... hold on :)"
     #return render_template("start.html") #, user_message)
