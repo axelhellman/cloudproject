@@ -11,31 +11,31 @@ startcluster=False
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template("home.html")
+    	return render_template("home.html")
 
 @app.route('/create', methods=['POST', 'GET'])
 def create():
-    amount = request.form['amount-workers']
-    mess = " Starting your cluster with " + amount + " workers..."
-    print mess
-    #res = createspark.delay(True,amount)
-    #result=res.get()
-    return render_template("home.html", message=mess)
-    #return jsonify(result)
+    	amount = request.form['amount-workers']
+    	mess = " Starting your cluster with " + amount + " workers..."
+    	print mess
+    	#res = createspark.delay(True,amount)
+    	#result=res.get()
+    	return render_template("home.html", message=mess)
+    	#return jsonify(result)
 
 @app.route('/resize', methods=['POST', 'GET'])
 def resize():
-	amount = request.form['new-amount-workers']
-	mess = "Resizing your cluster with" + amount + " workers..."
-	print mess
-    return render_template("home.html", message=mess)
+		amount = request.form['new-amount-workers']
+		mess = "Resizing your cluster with " + amount + " workers..."
+		print mess
+    	return render_template("home.html", message=mess)
 
 @app.route('/remove', methods=['POST', 'GET'])
 def remove():
-	mess = "Removes your cluster..."
-	print mess
-    return render_template("home.html")
+		mess = "Removing your cluster..."
+		print mess
+    	return render_template("home.html", message=mess)
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0',debug=False)
+    	app.run(host='0.0.0.0',debug=False)
