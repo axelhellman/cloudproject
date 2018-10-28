@@ -9,36 +9,32 @@ current_workers = 0
 startcluster=False
 
 
-@app.route('/', methods=['GET'])
+@app.route('/', methods=['GET', 'POST'])
 def home():
         return render_template("home.html")
 
-@app.route('/create', methods=['POST'])
+@app.route('/create', methods=['POST', 'GET'])
 def create():
         amount = request.form['amount-workers']
-        user_mess = "Starting your cluster with " + amount + " workers..."
-        print user_mess
-        res = createspark.delay(True,amount,startcluster)
-        startcluster=True
-        current_workers=int(amount)
-        result=res.get()
-        render_template("home.html", message=user_mess)
+        mess = " Starting your cluster with " + amount + " workers..."
+        print mess
+        #res = createspark.delay(True,amount)
+        #result=res.get()
+        return render_template("home.html", message=mess)
         #return jsonify(result)
 
-@app.route('/resize', methods=['POST'])
+@app.route('/resize', methods=['POST', 'GET'])
 def resize():
-	amount = request.form['new-amount-workers']
-	user_mess = "Resizing your cluster with" + amount + " workers..."
-	print user_mess
-        res = resizespark.delay(amount, current_workers)
-        result=res.get()
-	render_template("home.html", message=user_mess)
-        return render_template("home.html", message=user_mess)
+		amount = request.form['new-amount-workers']
+		mess = "Resizing your cluster with" + amount + " workers..."
+		print mess
+		render_template("home.html", message=mess)
+        return render_template("home.html", message=mess)
 
-@app.route('/remove', methods=['POST'])
+@app.route('/remove', methods=['POST', 'GET'])
 def remove():
-	user_mess = "Removes your cluster..."
-	print user_mess
+		mess = "Removes your cluster..."
+		print mess
         return render_template("home.html")
 
 

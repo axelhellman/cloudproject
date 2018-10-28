@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <title>QTL</title>
         <script>
-                console.log("Works?")
+                // console.log("Works?");
         </script>
   </head>
   <body>
@@ -13,26 +13,31 @@
     <br />
 
     <h3>Start cluster</h3>
-        <form action="{{ url_for('create') }}" method="post">
-                <input type"number" name="amount-workers" min="0" max="9" placeholder="Amount of workers...">
+        <form action="{{ url_for('create') }}" method="POST">
+                <input type"number" name="amount-workers" min="0" max="9" required placeholder="Amount of workers...">
                 <button type="submit">Start cluster</button>
         </form>
         <br />
 
     <h3>Resize cluster</h3>
-      <form action="{{ url_for('resize') }}" method="post">
-              <input type"number" name="new-amount-workers" maxlength="1" placeholder="New amount of workers...">
+      <form action="{{ url_for('resize') }}" method="POST">
+              <input type"number" name="new-amount-workers" maxlength="1" required placeholder="New amount of workers...">
               <button type="submit">Resize yao</button>
       </form>
         <br />
 
     <h3>Remove cluster</h3>
-        <form action="{{ url_for('remove') }}" method="post">
+        <form action="{{ url_for('remove') }}" method="POST">
             <button type="submit" name="remove">Remove</button>
         </form>
         <br />
 
-    <h2>Output</h2>
-    {{ user_mess }}
+    <h2>
+      Output: {% if message %}
+  	  <label style="color:orange"> {{ message }} </label>
+	    {% else %}
+  	  <label></label>
+      {% endif %}
+    </h2>
   </body>
 </html>
