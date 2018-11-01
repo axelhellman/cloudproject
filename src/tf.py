@@ -64,7 +64,7 @@ def removeinstance(name):
     sess = session.Session(auth=auth)
     nova = client.Client('2.1', session=sess)
     print "user authorization completed."
-    
+
     server=nova.servers.find(name=name)
     server.delete()
     #     print "Delete instance with name: " + name
@@ -72,6 +72,19 @@ def removeinstance(name):
     # else:
     #     print "There's no instance with name: " + name
     #     return False
+
+@app.task
+def removespark():
+    # Remove sparkmaster
+    name = "acc20-sparkmaster"
+    removeinstance(name):
+
+    # Remove sparkworkers
+    while amount_of_workers > 0
+        name = "acc20-sparkworker"+str(amount_of_workers)
+        removeinstance(name)
+
+    current_workers = 0
 
 @app.task
 def createspark(SM, SW):
