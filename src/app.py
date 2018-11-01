@@ -1,6 +1,6 @@
 #!flask/bin/python
 from flask import Flask, jsonify, render_template, request
-from tf import createspark, resizespark
+from tf import createspark, resizespark, removespark
 import subprocess
 import sys
 

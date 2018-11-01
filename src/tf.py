@@ -40,7 +40,7 @@ def resizespark(SW):
             cw = current_workers
             print "current workers: " + str(current_workers)
             #cw -=1
-            while cw >= SW and cw > 0:
+            while cw > SW and cw > 0:
                 name = "acc20-sparkworker"+str(cw)
                 print "deleting " + name
                 removeinstance(name)
