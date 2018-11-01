@@ -2,9 +2,9 @@
 
 nameA='ACC20-A-important'
 nameSM='acc20-sparkmaster'
-nameSW='acc20-sparkworker1'
-# nameSM='ACC20-SM-important'
-# nameSW='ACC20-S-important'
+nameSW='acc20-sparkworker'
+#nameSM='ACC20-SM-important'
+#nameSW='ACC20-S-important'
 
 source openrc.sh
 
@@ -17,60 +17,92 @@ full=$(grep $nameA -r serverlist)
 ips=$(cut -d "=" -f 2 <<< $full)
 privA=${ips:0:12}
 floatingA=${ips:14:12}
-
+if [ -z "$privA" ]
+then
+  privA='none'
+fi
 
 full=$(grep $nameSM -r serverlist)
 ips=$(cut -d "=" -f 2 <<< $full)
 privSM=${ips:0:12}
 floatingSM=${ips:14:12}
+if [ -z "$privSM" ]
+then
+  privSM='none'
+fi
 
-
-full=$(grep $nameSW -r serverlist)
-ips=$(cut -d "=" -f 2 <<< $full)
-privSW1=${ips:0:12}
-floatingSW1=${ips:14:12}
-
-# Remove unnecessary files
-rm serverlist
-
-echo "Filtered IPs from list"
-
-# /etc/hosts For all nodes
-echo "127.0.0.1 localhost
+# Variable workers
+hostContent=$"127.0.0.1 localhost
 $privA ansible-node
-$privSW1 sparkworker1
-$privSM sparkmaster
+$privSM sparkmaster"
 
+hostAnsibleContent=$"ansible-node ansible_ssh_host=$privA
+sparkmaster  ansible_ssh_host=$privSM"
+
+hostAnsibleContentSecond=$"
+[configNode]
+ansible-node ansible_connection=local ansible_user=ubuntu
+
+[sparkmaster]
+sparkmaster ansible_connection=ssh ansible_user=ubuntu"
+
+COUNTER=1
+while [ $COUNTER -lt 10 ]; do
+  newWorker="$nameSW$COUNTER"
+  full=$(grep $newWorker -r serverlist)
+  if [ -z "$full" ]
+  then
+    let COUNTER=15 # or break???
+  else
+    ips=$(cut -d "=" -f 2 <<< $full)
+    privSW=${ips:0:12}
+    floatingSW=${ips:14:12}
+
+    # etc/hosts file
+    singleLine="$privSW sparkworker$COUNTER"
+    hostContent=${hostContent}'\n'${singleLine}
+
+    # etc/ansible/hosts file
+    singleLine="sparkworker$COUNTER ansible_ssh_host=$privSW"
+    singleLineSecond="[sparkworker$COUNTER]
+    sparkworker$COUNTER ansible_connection=ssh ansible_user=ubuntu"
+    hostAnsibleContent=${hostAnsibleContent}'\n'${singleLine}
+    hostAnsibleContentSecond=${hostAnsibleContentSecond}'\n'${singleLineSecond}
+  fi
+  	let COUNTER=COUNTER+1
+done
+
+######################/etc/hosts file########################
+
+hostContentEnd="
 # The following lines are desirable for IPv6 capable hosts
 ::1 ip6-localhost ip6-loopback
 fe00::0 ip6-localnet
 ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
-ff02::3 ip6-allhosts" > exampleHostFile
+ff02::3 ip6-allhosts"
 
-sudo cp exampleHostFile /etc/hosts
+echo -e "$hostContent$hostContentEnd" > exampleHostFile
+
+##############################################
+
+# Remove unnecessary files
+rm serverlist
+
+echo "Filtered IPs from list"
+
+sudo cp exampleHostFile /etc/hosts || true
 echo "Written to local /etc/hosts file"
 
-scp exampleHostFile ubuntu@$floatingSM:/etc/hosts
-scp exampleHostFile ubuntu@$floatingSW1:/etc/hosts
-echo "Written to remote /etc/hosts files (SM and SW)"
+# scp exampleHostFile ubuntu@$floatingSM:/etc/hosts
+# echo "Written to remote /etc/hosts files (SM and SW)"
 
-# /etc/ansible/hosts only for ansible node
-echo "ansible-node ansible_ssh_host=$privA
-sparkmaster  ansible_ssh_host=$privSM
-sparkworker1 ansible_ssh_host=$privSW1
+######################/etc/ansible/hosts file########################
 
-[configNode]
-ansible-node ansible_connection=local ansible_user=ubuntu
+echo -e "$hostAnsibleContent$hostAnsibleContentSecond" > exampleAnsibleHostsFile
 
-[sparkmaster]
-sparkmaster ansible_connection=ssh ansible_user=ubuntu
-
-[sparkworker]
-sparkworker1 ansible_connection=ssh ansible_user=ubuntu" > exampleAnsibleHostsFile
-
-sudo cp exampleAnsibleHostsFile /etc/ansible/hosts
+sudo cp exampleAnsibleHostsFile /etc/ansible/hosts || true
 echo "Written to local /etc/ansible/hosts file"
 
 
