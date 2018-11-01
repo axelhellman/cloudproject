@@ -61,15 +61,16 @@ def removeinstance(name):
 
 def removespark():
     # Remove sparkmaster
+    global current_workers
     name = "acc20-sparkmaster"
     if not removeinstance(name):
         print "Error while deleting cluster (problem deleting the master)"
 
     # Remove sparkworkers
-    while amount_of_workers > 0
-        name = "acc20-sparkworker"+str(amount_of_workers)
+    while current_workers > 0
+        name = "acc20-sparkworker"+str(current_workers)
         if removeinstance(name):
-            amount_of_workers -= 1
+            current_workers -= 1
         else:
             print "Error while deleting cluster (problem deleting one of the workers)"
             break
