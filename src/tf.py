@@ -79,7 +79,7 @@ def removeinstance(name):
 def removespark():
     # Remove sparkmaster
     name = "acc20-sparkmaster"
-    removeinstance(name):
+    removeinstance(name)
 
     # Remove sparkworkers
     while current_workers > 0
