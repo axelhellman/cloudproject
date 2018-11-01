@@ -14,6 +14,8 @@ from keystoneauth1 import session
 app = Celery('tasks', backend='rpc://', broker='pyamqp://guest@localhost')
 
 int current_workers
+bool started_cluster
+started_cluster = False
 
 @app.task
 def resizespark(SW):
@@ -26,6 +28,7 @@ def resizespark(SW):
     elif diff>0:
         #adding workers
         cw = current_workers
+        cw +=1
         while cw <= SW:
             image_name = "acc20-S-important"
             name = "acc20-sparkworker"+str(amount_of_workers)
@@ -37,9 +40,12 @@ def resizespark(SW):
         print("Remove workers")
     
 @app.task
-def createspark(SM, SW, startcluster):
+def createspark(SM, SW):
     global current_workers
-    if (startcluster==False):
+    global started_cluster
+    if (started_cluster==False):
+        print started_cluster
+        started_cluster = True
         SW=int(SW)
         i=1
         if SM == True:
@@ -52,10 +58,13 @@ def createspark(SM, SW, startcluster):
             name = "acc20-sparkworker"+str(i)
             createinstance(image_name,name, False)
             i+=1
+        
         else: 
             print("There is already a cluster running, you can either resize or decomission the cluster")
+    
     current_workers = SW
     print SW
+    print started_cluster
 
 
 def createinstance(image_name, name, assign_fip):
