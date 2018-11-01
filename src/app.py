@@ -11,47 +11,47 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    	return render_template("home.html")
+	return render_template("home.html")
 
 @app.route('/create', methods=['POST', 'GET'])
 def create():
-        amount = request.form['amount-workers']
-    	mess = " Started your cluster with " + amount + " workers..."
-    	print mess
-        res = createspark.delay(True,amount)
-    	result=res.get()
-    	return render_template("home.html", message=mess)
+    amount = request.form['amount-workers']
+	mess = " Started your cluster with " + amount + " workers..."
+	print mess
+    res = createspark.delay(True,amount)
+	result=res.get()
+	return render_template("home.html", message=mess)
 
 @app.route('/resize', methods=['POST', 'GET'])
 def resize():
-		amount = request.form['new-amount-workers']
-		mess = "Resized your cluster to " + amount + " workers..."
-		print mess
-        res = resizespark.delay(amount)
-        result = res.get()
-    	return render_template("home.html", message=mess)
+    amount = request.form['new-amount-workers']
+	mess = "Resized your cluster to " + amount + " workers..."
+	print mess
+    res = resizespark.delay(amount)
+    result = res.get()
+	return render_template("home.html", message=mess)
 
 @app.route('/remove', methods=['POST', 'GET'])
 def remove():
-		mess = "Your cluster has been removed"
-		print mess
-        res = removespark.delay()
-        result = res.get()
-    	return render_template("home.html", message=mess)
+	mess = "Your cluster has been removed"
+	print mess
+    res = removespark.delay()
+    result = res.get()
+	return render_template("home.html", message=mess)
 
 @app.route('/inject', methods=['POST', 'GET'])
 def inject():
-        if request.method == 'POST':
-                if 'file' not in request.files:
-                        mess = "File error"
-                        return render_template("home.html", message=mess)
-                file = request.files['file']
-                if file.filename == '':
-                        return render_template("home.html", message='No selected file')
-                ### Here we have to save the injected files to somewhere ###
-                mess = str(file.filename) + " is injected: "
+    if request.method == 'POST':
+        if 'file' not in request.files:
+                mess = "File error"
                 return render_template("home.html", message=mess)
+        file = request.files['file']
+        if file.filename == '':
+                return render_template("home.html", message='No selected file')
+        ### Here we have to save the injected files to somewhere ###
+        mess = str(file.filename) + " is injected: "
+        return render_template("home.html", message=mess)
 
 
 if __name__ == '__main__':
-    	app.run(host='0.0.0.0',debug=False)
+    app.run(host='0.0.0.0',debug=False)
