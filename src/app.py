@@ -16,25 +16,24 @@ def home():
 @app.route('/create', methods=['POST', 'GET'])
 def create():
         amount = request.form['amount-workers']
-    	mess = " Starting your cluster with " + amount + " workers..."
+    	mess = " Started your cluster with " + amount + " workers..."
     	print mess
-    	res = createspark.delay(True,amount)
+        res = createspark.delay(True,amount)
     	result=res.get()
     	return render_template("home.html", message=mess)
-    	#return jsonify(result)
 
 @app.route('/resize', methods=['POST', 'GET'])
 def resize():
 		amount = request.form['new-amount-workers']
-		mess = "Resizing your cluster with " + amount + " workers..."
+		mess = "Resized your cluster to " + amount + " workers..."
 		print mess
-        res = resizespark.dealy(amount)
+        res = resizespark.delay(amount)
         result = res.get() 
     	return render_template("home.html", message=mess)
 
 @app.route('/remove', methods=['POST', 'GET'])
 def remove():
-		mess = "Removing your cluster..."
+		mess = "Your cluster has been removed"
 		print mess
     	return render_template("home.html", message=mess)
 
