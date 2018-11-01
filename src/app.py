@@ -35,6 +35,8 @@ def resize():
 def remove():
 		mess = "Your cluster has been removed"
 		print mess
+        res = removespark.delay()
+        result = res.get()
     	return render_template("home.html", message=mess)
 
 

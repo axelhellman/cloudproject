@@ -18,26 +18,30 @@ started_cluster = False
 
 @app.task
 def resizespark(SW):
-    global current_workers
-    print current_workers
-    SW=int(SW)
-    diff = SW-current_workers
-    if diff==0:
-        print("You already have that amount fo workers")
-    elif diff>0:
-        #adding workers
-        cw = current_workers
-        cw +=1
-        while cw <= SW:
-            image_name = "acc20-S-important"
-            name = "acc20-sparkworker"+str(cw)
-            createinstance(image_name,name, False)
-            cw+=1
-        current_workers = SW
-    elif diff<0:
-        #removing workers
-        print("Remove workers")
+    if started_cluster == True:
+        global current_workers
+        print current_workers
     
+        SW=int(SW)
+        diff = SW-current_workers
+        if diff==0:
+            print("You already have that amount fo workers")
+        elif diff>0:
+            #adding workers
+            cw = current_workers
+            cw +=1
+            while cw <= SW:
+                image_name = "acc20-S-important"
+                name = "acc20-sparkworker"+str(cw)
+                createinstance(image_name,name, False)
+                cw+=1
+            current_workers = SW
+        elif diff<0:
+            #removing workers
+            print("Remove workers")
+    else:
+        print("There is not a cluster yet")
+        
 @app.task
 def createspark(SM, SW):
     global current_workers
@@ -46,6 +50,7 @@ def createspark(SM, SW):
         print started_cluster
         started_cluster = True
         SW=int(SW)
+        current_workers = SW
         i=1
         if SM == True:
             image_name = "acc20-SM-important" # acc20-SM-important
@@ -61,9 +66,10 @@ def createspark(SM, SW):
         else: 
             print("There is already a cluster running, you can either resize or decomission the cluster")
     
-    current_workers = SW
+    
     print SW
     print started_cluster
+
 
 
 def createinstance(image_name, name, assign_fip):
