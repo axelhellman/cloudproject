@@ -174,5 +174,5 @@ def createinstance(image_name, name, assign_fip):
 
     return "Instance: "+ instance.name +" is in " + inst_status + "state"
 
-    #if assign_fip == True:
-    #    instance.add_floating_ip("")#insert floating ip
+    if assign_fip == True:
+        instance.add_floating_ip("130.238.29.103")#insert floating ip
