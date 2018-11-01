@@ -32,6 +32,13 @@
         </form>
         <br />
 
+    <h3>Inject Data Files</h3>
+        <form action="{{ url_for('inject') }}" method="POST" enctype=multipart/form-data>
+            <input type="file" name="file" required />
+            <input type="submit" value="Upload file!">
+        </form>
+        <br />
+
     <h2>
       Output: {% if message %}
   	  <label style="color:orange"> {{ message }} </label>
