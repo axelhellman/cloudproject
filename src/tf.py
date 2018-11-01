@@ -21,7 +21,7 @@ def resizespark(SW):
     if started_cluster == True:
         global current_workers
         print current_workers
-    
+
         SW=int(SW)
         diff = SW-current_workers
         if diff==0:
@@ -37,11 +37,43 @@ def resizespark(SW):
                 cw+=1
             current_workers = SW
         elif diff<0:
-            #removing workers
+            cw = current_workers
+            cw -=1
+            while cw >= SW and cw > 0:
+                name = "acc20-sparkworker"+str(cw)
+                removeinstance(name)
+                cw-=1
+            current_workers = SW
             print("Remove workers")
     else:
         print("There is not a cluster yet")
-        
+
+
+@app.task
+def removeinstance(name):
+    #if name exists:
+    nova.servers.delete(name)
+    #     print "Delete instance with name: " + name
+    #     return True
+    # else:
+    #     print "There's no instance with name: " + name
+    #     return False
+
+def removespark():
+    # Remove sparkmaster
+    name = "acc20-sparkmaster"
+    if not removeinstance(name):
+        print "Error while deleting cluster (problem deleting the master)"
+
+    # Remove sparkworkers
+    while amount_of_workers > 0
+        name = "acc20-sparkworker"+str(amount_of_workers)
+        if removeinstance(name):
+            amount_of_workers -= 1
+        else:
+            print "Error while deleting cluster (problem deleting one of the workers)"
+            break
+
 @app.task
 def createspark(SM, SW):
     global current_workers
@@ -62,11 +94,11 @@ def createspark(SM, SW):
             name = "acc20-sparkworker"+str(i)
             createinstance(image_name,name, False)
             i+=1
-        
-        else: 
+
+        else:
             print("There is already a cluster running, you can either resize or decomission the cluster")
-    
-    
+
+
     print SW
     print started_cluster
 

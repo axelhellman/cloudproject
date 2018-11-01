@@ -17,7 +17,7 @@ app = Celery('tasks', backend='rpc://', broker='pyamqp://guest@localhost')
 #startcluster=False
 
 @app.task
-def removespark(SW, CW):
+def removespark():
     # Remove sparkmaster
     name = "acc20-sparkmaster"
     if not removeinstance(name):
@@ -34,32 +34,10 @@ def removespark(SW, CW):
 
 @app.task
 def removeinstance(name):
-    if name exists:
-        nova delete name
-        print "Delete instance with name: " + name
-        return True
-    else:
-        print "There's no instance with name: " + name
-        return False
-
-
-
-
-@app.task
-def resizespark(SW, CW):
-    SW=int(SW)
-    CW=int(CW)
-    diff = SW-CW
-    if diff==0:
-        print("You already have that amount fo workers")
-    elif diff>0:
-        #adding workers
-        while amount_of_workers <= SW:
-            image_name = "acc20-S-important"
-            name = "acc20-sparkworker"+str(amount_of_workers)
-            createinstance(image_name,name, False)
-            amount_of_workers+=1
-
-    elif diff<0:
-        #removing workers
-        print("Remove workers")
+    #if name exists:
+    nova.servers.delete(name)
+    #     print "Delete instance with name: " + name
+    #     return True
+    # else:
+    #     print "There's no instance with name: " + name
+    #     return False
