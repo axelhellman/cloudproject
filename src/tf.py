@@ -82,7 +82,7 @@ def removespark():
     removeinstance(name)
 
     # Remove sparkworkers
-    while current_workers > 0
+    while current_workers > 0:
         name = "acc20-sparkworker"+str(current_workers)
         removeinstance(name)
         current_workers -= 1
