@@ -77,6 +77,7 @@ def removeinstance(name):
 
 @app.task
 def removespark():
+    global current_workers
     # Remove sparkmaster
     name = "acc20-sparkmaster"
     removeinstance(name)

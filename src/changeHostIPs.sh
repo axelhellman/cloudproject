@@ -99,13 +99,15 @@ echo "Filtered IPs from list"
 sudo cp exampleHostFile /etc/hosts || true
 echo "Written to local /etc/hosts file"
 
-for i in "${floatingIPs[@]}"
-do
-   echo "$i"
-   scp exampleHostFile ubuntu@"$i":/etc/hostsecho
-done
+# for i in "${floatingIPs[@]}"
+# do
+#    echo "$i"
+#    scp exampleHostFile ubuntu@"$i":/etc/hostsecho
+# done
 # scp exampleHostFile ubuntu@$floatingSM:/etc/hosts
 # echo "Written to remote /etc/hosts files (SM and SW)"
+
+scp exampleHostFile ubuntu@$floatingSM:/etc/hosts
 
 ######################/etc/ansible/hosts file########################
 
