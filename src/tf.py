@@ -38,7 +38,7 @@ def resizespark(SW):
             current_workers = SW
         elif diff<0:
             cw = current_workers
-            cw -=1
+            #cw -=1
             while cw >= SW and cw > 0:
                 name = "acc20-sparkworker"+str(cw)
                 removeinstance(name)
@@ -65,7 +65,8 @@ def removeinstance(name):
     nova = client.Client('2.1', session=sess)
     print "user authorization completed."
     
-    nova.servers.delete(name)
+    server=nova.servers.find(name=name)
+    server.delete()
     #     print "Delete instance with name: " + name
     #     return True
     # else:
