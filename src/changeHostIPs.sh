@@ -87,7 +87,7 @@ ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 ff02::3 ip6-allhosts"
 
-echo -e "$hostContent$hostContentEnd" > exampleHostFile
+echo -e "$hostContent$hostContentEnd" > hostFile
 
 ##############################################
 
@@ -96,24 +96,25 @@ rm serverlist
 
 echo "Filtered IPs from list"
 
-sudo cp exampleHostFile /etc/hosts || true
+sudo cp hostFile /etc/hosts || true
 echo "Written to local /etc/hosts file"
 
 # for i in "${floatingIPs[@]}"
 # do
 #    echo "$i"
-#    scp exampleHostFile ubuntu@"$i":/etc/hostsecho
+#    scp hostFile ubuntu@"$i":/etc/hostsecho
 # done
-# scp exampleHostFile ubuntu@$floatingSM:/etc/hosts
+# scp hostFile ubuntu@$floatingSM:/etc/hosts
 # echo "Written to remote /etc/hosts files (SM and SW)"
 
-scp exampleHostFile ubuntu@$floatingSM:/etc/hosts
+scp hostFile ubuntu@$floatingSM:/etc/hosts
+echo "Written to remote /etc/hosts sparkmaster file"
 
 ######################/etc/ansible/hosts file########################
 
-echo -e "$hostAnsibleContent$hostAnsibleContentSecond" > exampleAnsibleHostsFile
+echo -e "$hostAnsibleContent$hostAnsibleContentSecond" > ansibleHostsFile
 
-sudo cp exampleAnsibleHostsFile /etc/ansible/hosts || true
+sudo cp ansibleHostsFile /etc/ansible/hosts || true
 echo "Written to local /etc/ansible/hosts file"
 
 
