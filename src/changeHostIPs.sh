@@ -3,6 +3,8 @@
 nameA='ACC20-A-important'
 nameSM='acc20-sparkmaster'
 nameSW='acc20-sparkworker'
+
+declare -a floatingIPs=()
 #nameSM='ACC20-SM-important'
 #nameSW='ACC20-S-important'
 
@@ -58,6 +60,8 @@ while [ $COUNTER -lt 10 ]; do
     privSW=${ips:0:12}
     floatingSW=${ips:14:12}
 
+    floatingIPs=( "${floatingIPs[@]}" "$floatingSW" )
+
     # etc/hosts file
     singleLine="$privSW sparkworker$COUNTER"
     hostContent=${hostContent}'\n'${singleLine}
@@ -95,6 +99,11 @@ echo "Filtered IPs from list"
 sudo cp exampleHostFile /etc/hosts || true
 echo "Written to local /etc/hosts file"
 
+for i in "${floatingIPs[@]}"
+do
+   echo "$i"
+   scp exampleHostFile ubuntu@"$i":/etc/hostsecho
+done
 # scp exampleHostFile ubuntu@$floatingSM:/etc/hosts
 # echo "Written to remote /etc/hosts files (SM and SW)"
 

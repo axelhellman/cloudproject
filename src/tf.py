@@ -51,29 +51,26 @@ def resizespark(SW):
 
 @app.task
 def removeinstance(name):
-    #if name exists:
+    # if name exists:
+    loader = loading.get_plugin_loader('password')
+    auth = loader.load_from_options(auth_url=env['OS_AUTH_URL'],
+        username=env['OS_USERNAME'],
+        password=env['OS_PASSWORD'],
+        project_name=env['OS_PROJECT_NAME'],
+        project_domain_name=env['OS_USER_DOMAIN_NAME'],
+        project_id=env['OS_PROJECT_ID'],
+        user_domain_name=env['OS_USER_DOMAIN_NAME'])
+
+    sess = session.Session(auth=auth)
+    nova = client.Client('2.1', session=sess)
+    print "user authorization completed."
+    
     nova.servers.delete(name)
     #     print "Delete instance with name: " + name
     #     return True
     # else:
     #     print "There's no instance with name: " + name
     #     return False
-
-def removespark():
-    # Remove sparkmaster
-    global current_workers
-    name = "acc20-sparkmaster"
-    if not removeinstance(name):
-        print "Error while deleting cluster (problem deleting the master)"
-
-    # Remove sparkworkers
-    while current_workers > 0:
-        name = "acc20-sparkworker"+str(current_workers)
-        if removeinstance(name):
-            current_workers -= 1
-        else:
-            print "Error while deleting cluster (problem deleting one of the workers)"
-            break
 
 @app.task
 def createspark(SM, SW):
