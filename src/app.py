@@ -6,7 +6,7 @@ import sys
 
 app = Flask(__name__)
 #current_workers = 0
-startcluster=False
+
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -15,14 +15,12 @@ def home():
 
 @app.route('/create', methods=['POST', 'GET'])
 def create():
-    	global startcluster
         amount = request.form['amount-workers']
     	mess = " Starting your cluster with " + amount + " workers..."
     	print mess
-    	res = createspark.delay(True,amount,startcluster)
+    	res = createspark.delay(True,amount)
     	result=res.get()
     	return render_template("home.html", message=mess)
-        startcluster = True
     	#return jsonify(result)
 
 @app.route('/resize', methods=['POST', 'GET'])
