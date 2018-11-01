@@ -28,7 +28,7 @@ def resize():
 		mess = "Resized your cluster to " + amount + " workers..."
 		print mess
         res = resizespark.delay(amount)
-        result = res.get() 
+        result = res.get()
     	return render_template("home.html", message=mess)
 
 @app.route('/remove', methods=['POST', 'GET'])
@@ -38,6 +38,19 @@ def remove():
         res = removespark.delay()
         result = res.get()
     	return render_template("home.html", message=mess)
+
+@app.route('/inject', methods=['POST', 'GET'])
+def inject():
+        if request.method == 'POST':
+                if 'file' not in request.files:
+                        mess = "File error"
+                        return render_template("home.html", message=mess)
+                file = request.files['file']
+                if file.filename == '':
+                        return render_template("home.html", message='No selected file')
+                ### Here we have to save the injected files to somewhere ###
+                mess = str(file.filename) + " is injected: "
+                return render_template("home.html", message=mess)
 
 
 if __name__ == '__main__':
