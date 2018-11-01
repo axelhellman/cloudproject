@@ -38,9 +38,11 @@ def resizespark(SW):
             current_workers = SW
         elif diff<0:
             cw = current_workers
+            print "current workers: " + str(current_workers)
             #cw -=1
             while cw >= SW and cw > 0:
                 name = "acc20-sparkworker"+str(cw)
+                print "deleting " + name
                 removeinstance(name)
                 cw-=1
             current_workers = SW
@@ -80,11 +82,10 @@ def removespark():
     removeinstance(name):
 
     # Remove sparkworkers
-    while amount_of_workers > 0
-        name = "acc20-sparkworker"+str(amount_of_workers)
+    while current_workers > 0
+        name = "acc20-sparkworker"+str(current_workers)
         removeinstance(name)
-
-    current_workers = 0
+        current_workers -= 1
 
 @app.task
 def createspark(SM, SW):
