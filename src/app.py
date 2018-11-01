@@ -5,7 +5,7 @@ import subprocess
 import sys
 
 app = Flask(__name__)
-current_workers = 0
+#current_workers = 0
 startcluster=False
 
 
@@ -15,12 +15,14 @@ def home():
 
 @app.route('/create', methods=['POST', 'GET'])
 def create():
-    	amount = request.form['amount-workers']
+    	global startcluster
+        amount = request.form['amount-workers']
     	mess = " Starting your cluster with " + amount + " workers..."
     	print mess
-    	#res = createspark.delay(True,amount)
-    	#result=res.get()
+    	res = createspark.delay(True,amount,startcluster)
+    	result=res.get()
     	return render_template("home.html", message=mess)
+        startcluster = True
     	#return jsonify(result)
 
 @app.route('/resize', methods=['POST', 'GET'])
@@ -28,6 +30,8 @@ def resize():
 		amount = request.form['new-amount-workers']
 		mess = "Resizing your cluster with " + amount + " workers..."
 		print mess
+        res = resizespark.dealy(amount)
+        result = res.get() 
     	return render_template("home.html", message=mess)
 
 @app.route('/remove', methods=['POST', 'GET'])

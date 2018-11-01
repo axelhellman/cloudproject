@@ -10,25 +10,27 @@ from  novaclient import client
 import keystoneclient.v3.client as ksclient
 from keystoneauth1 import loading
 from keystoneauth1 import session
-#this is the argument for the broker
-#app = Celery('tasks', broker='pyamqp://guest@localhost//')
+
 app = Celery('tasks', backend='rpc://', broker='pyamqp://guest@localhost')
-#amount_of_workers = 0
-#startcluster=False
+
+int current_workers
+
 @app.task
-def resizespark(SW, CW):
+def resizespark(SW):
+    global current_workers
+    print current_workers
     SW=int(SW)
-    CW=int(CW)
-    diff = SW-CW
+    diff = SW-current_workers
     if diff==0:
         print("You already have that amount fo workers")
     elif diff>0:
         #adding workers
-        while amount_of_workers <= SW:
+        cw = current_workers
+        while cw <= SW:
             image_name = "acc20-S-important"
             name = "acc20-sparkworker"+str(amount_of_workers)
             createinstance(image_name,name, False)
-            amount_of_workers+=1
+            cw+=1
         
     elif diff<0:
         #removing workers
@@ -36,9 +38,9 @@ def resizespark(SW, CW):
     
 @app.task
 def createspark(SM, SW, startcluster):
+    global current_workers
     if (startcluster==False):
         SW=int(SW)
-        amount_of_workers=SW
         i=1
         if SM == True:
             image_name = "acc20-SM-important" # acc20-SM-important
@@ -52,6 +54,8 @@ def createspark(SM, SW, startcluster):
             i+=1
         else: 
             print("There is already a cluster running, you can either resize or decomission the cluster")
+    current_workers = SW
+    print SW
 
 
 def createinstance(image_name, name, assign_fip):
