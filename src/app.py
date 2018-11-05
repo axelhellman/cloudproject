@@ -1,6 +1,6 @@
 #!flask/bin/python
 from flask import Flask, jsonify, render_template, request
-from tf import createspark, resizespark, removespark
+from tf import createspark, resizespark, removespark, sendFile
 import subprocess
 import sys
 import os
@@ -53,11 +53,13 @@ def inject():
         #This is how you're supposed to do it but for some reason it doesn't work: file.save(os.path.join(app.config[UPLOAD_FOLDER], file.filename))
         mess = str(file.filename) + " is injected: "
 
+        res = sendFile.delay(file.filename)
+        result = res.get()
+
         # Send it to spark master node
-        # Missing floatingIPSM!!!
-        #bashCommand = "scp" + '/home/ubuntu/'+file.filename + "ubuntu@" + floatingIPSM + ":/home/ubuntu/"
-        #process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-        #output, error = process.communicate()
+        # bashCommand = "scp " + '/home/ubuntu/'+file.filename + " sparkmaster:/home/ubuntu/test"
+        # process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+        # output, error = process.communicate()
         return render_template("home.html", message=mess)
 
 

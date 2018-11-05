@@ -1,6 +1,6 @@
 from flask import Flask
 from celery import Celery
-from subprocess import call
+import subprocess
 import sys, os, time
 import json
 import re
@@ -92,6 +92,20 @@ def removespark():
     started_cluster = False
 
 @app.task
+def sendFile(fileName):
+    print "hello" + fileName
+    # bashCommandSSH = 'ssh-keygen -f  \"/home/ubuntu/.ssh/known_hosts\" -R sparkmaster'
+    # process = subprocess.Popen(bashCommandSSH.split(), stdout=subprocess.PIPE)
+    # output, error = process.communicate()
+    # print "ssh command done: " + bashCommandSSH
+
+
+    # Send it to spark master node
+    bashCommand = "scp -o StrictHostKeyChecking=no " + '/home/ubuntu/'+fileName + " sparkmaster:/home/ubuntu"
+    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+    output, error = process.communicate()
+
+@app.task
 def createspark(SM, SW):
     global current_workers
     global started_cluster
@@ -118,6 +132,11 @@ def createspark(SM, SW):
 
     print SW
     print started_cluster
+
+    bashCommand = "/home/ubuntu/changeHostIPs.sh"
+    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+    output, error = process.communicate()
+
 
 
 
