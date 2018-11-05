@@ -28,6 +28,8 @@ full=$(grep $nameSM -r serverlist)
 ips=$(cut -d "=" -f 2 <<< $full)
 privSM=${ips:0:12}
 floatingSM=${ips:14:12}
+echo "salu2"
+echo "$floatingSM" >> floatingSM
 if [ -z "$privSM" ]
 then
   privSM='none'
@@ -107,7 +109,7 @@ echo "Written to local /etc/hosts file"
 # scp hostFile ubuntu@$floatingSM:/etc/hosts
 # echo "Written to remote /etc/hosts files (SM and SW)"
 
-scp hostFile ubuntu@$floatingSM:/etc/hosts
+scp -o StrictHostKeyChecking=no hostFile ubuntu@$floatingSM:/etc/hosts
 echo "Written to remote /etc/hosts sparkmaster file"
 
 ######################/etc/ansible/hosts file########################
@@ -117,8 +119,7 @@ echo -e "$hostAnsibleContent$hostAnsibleContentSecond" > ansibleHostsFile
 sudo cp ansibleHostsFile /etc/ansible/hosts || true
 echo "Written to local /etc/ansible/hosts file"
 
-
-
+ansible-playbook -s spark_deployment.yml
 
 
 ############ Manually get the floating IPs ###############

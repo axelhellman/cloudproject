@@ -47,6 +47,10 @@ def resizespark(SW):
                 cw-=1
             current_workers = SW
             print("Remove workers")
+	    bashCommand = "ansible-playbook -s spark_deployment.yml"
+	    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+	    output, error = process.communicate()
+        
     else:
         print("There is not a cluster yet")
 
@@ -177,7 +181,10 @@ def createinstance(image_name, name, assign_fip):
     else:
         sys.exit("cloud-cfg.txt is not in current working directory")
 
-    secgroups = ['default', 'kramstrom-lab1'] #add the security group we need to have for SparkMaster, SparkWorker and Ansible-Node
+    if assign_fip:
+        secgroups = ['default', 'ACC20SM'] #add the security group we need to have for SparkMaster, SparkWorker and Ansible-Node
+    else:
+        secgroups = ['default', 'ACC20S']
 
     print "Creating instance ... "
     instance = nova.servers.create(name=name, image=image, flavor=flavor, userdata=userdata, nics=nics,security_groups=secgroups) #key_name='axel_keypair_uu')
