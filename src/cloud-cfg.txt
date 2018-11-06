@@ -1,7 +1,5 @@
 #cloud-config
 
  runcmd:
- - echo "export PATH = $PATH:/usr/games" >> /home/ubuntu/.bashrc
- - source /home/ubuntu/.bashrc
  - echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzxy7NyC3JifK99tZtQjct6TvTWhuFnfHv6g5fEIDa+9IAQUZnri/JKs3KPiQBPSyDiYlesbg7cLfWI0YKGq45SG1EFnhb3FO+AIHz7lNcYH24YafK8xQ1m3HWjiGb2r/fnYBO26ui0bR0RRFReBA1c3JvKMMBZDm9a0c3heqEdbtzh8/scqtBq2lrIe/B+AOflfHK5BLWO5NeEsJJ9g1v1psYWAbK761I6qUi80pwVdbOhfQurrdExdEFWbEzhykx4a75PGxo++JkBgt2RpnBYBGeMmkgYWPhkvSCPzVgLBa55vIFE0XLlxWq5B+p+AvR72wq/5FE5bSNzqgOhNtn ubuntu@acc20-a-important" > /home/ubuntu/.ssh/authorized_keys
  - sudo chmod 777 /etc/hosts
