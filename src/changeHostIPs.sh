@@ -62,7 +62,7 @@ while [ $COUNTER -lt 10 ]; do
     privSW=${ips:0:12}
     floatingSW=${ips:14:12}
 
-    floatingIPs=( "${floatingIPs[@]}" "$floatingSW" )
+    floatingIPs=( "${floatingIPs[@]}" "$privSW" )
 
     # etc/hosts file
     singleLine="$privSW sparkworker$COUNTER"
@@ -103,8 +103,8 @@ echo "Written to local /etc/hosts file"
 
 for i in "${floatingIPs[@]}"
 do
-   echo "salu2"
-   echo "$i"
+   # echo "salu2: "
+   # echo "$i"
    scp -o StrictHostKeyChecking=no hostFile ubuntu@"$i":/etc/hosts
 done
 echo "Written to remote /etc/hosts files (SM and SW)"
@@ -121,7 +121,7 @@ echo -e "$hostAnsibleContent$hostAnsibleContentSecond" > ansibleHostsFile
 sudo cp ansibleHostsFile /etc/ansible/hosts || true
 echo "Written to local /etc/ansible/hosts file"
 
-ansible-playbook -s spark_deployment.yml
+# ansible-playbook -s spark_deployment.yml
 
 
 ############ Manually get the floating IPs ###############
