@@ -8,7 +8,6 @@
                  state=present
      when: hostvars[item].ansible_default_ipv4.address is defined
      with_items: "{{groups['all']}}"
-
    - name: Set hostname
      hostname: name="{{inventory_hostname}}"
    
@@ -18,8 +17,11 @@
 
 
 - hosts: sparkmaster
-  tasks:
 
+  vars_files:
+   - setup_var.yml 
+
+   tasks:
    - name: start jupyter
      shell: runuser -l ubuntu -c 'jupyter notebook --ip=0.0.0.0 --port=60060 &'
      async: 2592000               # 60*60*24*30 – 1 month
