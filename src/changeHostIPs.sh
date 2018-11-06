@@ -121,7 +121,7 @@ echo -e "$hostAnsibleContent$hostAnsibleContentSecond" > ansibleHostsFile
 sudo cp ansibleHostsFile /etc/ansible/hosts || true
 echo "Written to local /etc/ansible/hosts file"
 
-# ansible-playbook -s spark_deployment.yml
+ansible-playbook -s spark_deployment.yml
 
 
 ############ Manually get the floating IPs ###############

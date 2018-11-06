@@ -97,7 +97,6 @@ def removespark():
 
 @app.task
 def sendFile(fileName):
-    print "hello" + fileName
     # bashCommandSSH = 'ssh-keygen -f  \"/home/ubuntu/.ssh/known_hosts\" -R sparkmaster'
     # process = subprocess.Popen(bashCommandSSH.split(), stdout=subprocess.PIPE)
     # output, error = process.communicate()
@@ -108,6 +107,19 @@ def sendFile(fileName):
     bashCommand = "scp -o StrictHostKeyChecking=no " + '/home/ubuntu/'+fileName + " sparkmaster:/home/ubuntu"
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
+
+@app.task
+def getTokens():
+    bashCommand = "ssh sparkmaster 'cat /home/ubuntu/.local/share/jupyter/runtime/*.json | grep token' > tokens"
+    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+    output, error = process.communicate()
+
+    tokensPath =  os.getcwd()+'/tokens'
+    if os.path.isfile(tokensPath):
+        tokens = open(tokensPath)
+        print str(tokens.read())
+    else:
+        sys.exit("tokens file is not in current working directory")
 
 @app.task
 def createspark(SM, SW):
@@ -137,18 +149,32 @@ def createspark(SM, SW):
     print SW
     print started_cluster
 
+    # IPs
+
     bashCommand = "/home/ubuntu/changeHostIPs.sh"
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
 
+    # tokens
+    bashCommand = "ssh sparkmaster 'cat /home/ubuntu/.local/share/jupyter/runtime/*.json | grep token' > tokens"
+    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+    output, error = process.communicate()
 
+    tokensPath =  os.getcwd()+'/tokens'
+    if os.path.isfile(tokensPath):
+        tokens = open(tokensPath)
+        print str(tokens.read())
+        tokens = str(tokens.read()) + "  tt"
+        return tokens
+    else:
+        sys.exit("tokens file is not in current working directory")
 
 
 def createinstance(image_name, name, assign_fip):
     flavor = "ACCHT18.normal"
     private_net = "SNIC 2018/10-30 Internal IPv4 Network"
     floating_ip_pool_name = None #"Public External IPv4 network"
-    floating_ip = "130.238.29.2" #should be able take an IP from the pool which is free instead todo if we have time 
+    floating_ip = "130.238.29.94" #should be able take an IP from the pool which is free instead todo if we have time 
 
     loader = loading.get_plugin_loader('password')
     auth = loader.load_from_options(auth_url=env['OS_AUTH_URL'],

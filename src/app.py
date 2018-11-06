@@ -1,6 +1,6 @@
 #!flask/bin/python
 from flask import Flask, jsonify, render_template, request
-from tf import createspark, resizespark, removespark, sendFile
+from tf import createspark, resizespark, removespark, sendFile, getTokens
 import subprocess
 import sys
 import os
@@ -20,8 +20,9 @@ def create():
     mess = " Started your cluster with " + amount + " workers..."
     print mess
     res = createspark.delay(True,amount)
-    result=res.get()
-    return render_template("home.html", message=mess)
+    token=res.get()
+    touser = "Your cluster is up, here is your token: " + str(token)
+    return render_template("home.html", message=touser)
 
 @app.route('/resize', methods=['POST', 'GET'])
 def resize():
