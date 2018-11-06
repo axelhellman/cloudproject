@@ -101,16 +101,18 @@ echo "Filtered IPs from list"
 sudo cp hostFile /etc/hosts || true
 echo "Written to local /etc/hosts file"
 
-# for i in "${floatingIPs[@]}"
-# do
-#    echo "$i"
-#    scp hostFile ubuntu@"$i":/etc/hostsecho
-# done
-# scp hostFile ubuntu@$floatingSM:/etc/hosts
-# echo "Written to remote /etc/hosts files (SM and SW)"
+for i in "${floatingIPs[@]}"
+do
+   echo "salu2"
+   echo "$i"
+   scp -o StrictHostKeyChecking=no hostFile ubuntu@"$i":/etc/hosts
+done
+echo "Written to remote /etc/hosts files (SM and SW)"
 
 scp -o StrictHostKeyChecking=no hostFile ubuntu@$floatingSM:/etc/hosts
 echo "Written to remote /etc/hosts sparkmaster file"
+
+
 
 ######################/etc/ansible/hosts file########################
 
