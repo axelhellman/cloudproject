@@ -1,6 +1,25 @@
 - hosts: all
   tasks:
-    
+
+   - name: Generate hosts file
+     lineinfile: dest=/etc/hosts
+                 regexp='.*{{ item }}$'
+                 line="{{ hostvars[item].ansible_default_ipv4.address }} {{item}}"
+                 state=present
+     when: hostvars[item].ansible_default_ipv4.address is defined
+     with_items: "{{groups['all']}}"
+
+   - name: Set hostname
+     hostname: name="{{inventory_hostname}}"
+   
+   - name: Include variables
+     include_vars: setup_var.yml 
+
+
+
+- hosts: sparkmaster
+  tasks:
+
    - name: start jupyter
      shell: runuser -l ubuntu -c 'jupyter notebook --ip=0.0.0.0 --port=60060 &'
      async: 2592000               # 60*60*24*30 – 1 month
@@ -21,7 +40,7 @@
       - sysctl -p
 
    - name: start spark master process
-     shell: nohup {{spark_home}}/sbin/start-master.sh  &
+     shell: nohup /usr/local/spark-2.2.2-bin-hadoop2.6/sbin/start-master.sh  &
 
 - hosts: sparkworker
     
@@ -36,4 +55,4 @@
       - sysctl -p
  
    - name: start spark worker process
-     shell: nohup {{spark_home}}/sbin/start-slave.sh spark://sparkmaster:7077 &
+     shell: nohup /usr/local/spark-2.2.2-bin-hadoop2.6/sbin/start-slave.sh spark://sparkmaster:7077 &
