@@ -21,7 +21,7 @@
   vars_files:
    - setup_var.yml 
 
-   tasks:
+  tasks:
    - name: start jupyter
      shell: runuser -l ubuntu -c 'jupyter notebook --ip=0.0.0.0 --port=60060 &'
      async: 2592000               # 60*60*24*30 – 1 month
