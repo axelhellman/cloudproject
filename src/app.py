@@ -20,8 +20,9 @@ def create():
     mess = " Started your cluster with " + amount + " workers..."
     print (mess)
     res = createspark.delay(True,amount)
-    #token=res.get()
-    #touser = "Your cluster is up, here is your token: " + str(token)
+    token = res.get()
+    # print "From app.py: " + str(token)
+    touser = "Your cluster is up, here is your token: " + str(token)
     return render_template("home.html", message=touser)
 
 @app.route('/resize', methods=['POST', 'GET'])
@@ -39,6 +40,7 @@ def remove():
     print (mess)
     res = removespark.delay()
     result = res.get()
+    print "removal complete"
     return render_template("home.html", message=mess)
 
 @app.route('/inject', methods=['POST', 'GET'])
@@ -65,9 +67,10 @@ def inject():
 
 @app.route('/jupyter', methods=['POST', 'GET'])
 def jupyter():
-    result = getTokens.delay()
-    token = jsonify.(result)
-    mess ="Hello use this ip: and this token:%s" %()
+    # result = getTokens.delay()
+    # token = jsonify.(result)
+    # mess ="Hello use this ip: and this token:%s" %()
+    mess = "testmess"
     return render_template("home.html", message=mess)
 
 

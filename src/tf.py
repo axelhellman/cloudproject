@@ -73,7 +73,7 @@ def removeinstance(name):
 
     server=nova.servers.find(name=name)
     server.delete()
-    #     print "Delete instance with name: " + name
+    print "Delete instance with name: " + name
     #     return True
     # else:
     #     print "There's no instance with name: " + name
@@ -114,10 +114,17 @@ def getTokens():
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
 
-    tokensPath =  os.getcwd()+'/tokens'
-    if os.path.isfile(tokensPath):
-        tokens = open(tokensPath)
-        return str(tokens.read()) #print
+    floatPath = os.getcwd()+'/floatingSM'
+    tokensPath = os.getcwd()+'/tokens'
+
+    if os.path.isfile(floatPath) and os.path.isfile(tokensPath):
+        floatIP = open(floatPath, 'r')
+        tokens = open(tokensPath, 'r')
+        print "tokens: " + str(tokens.read()) #print
+        print "floatingIP " + str(floatIP.read()) #print
+        return "testing " + str(floatIP.read().replace('\n', '')) + " testing"
+    elif not os.path.isfile(floatPath):
+        sys.exit("floatingSM file is not in current working directory")
     else:
         sys.exit("tokens file is not in current working directory")
 
@@ -155,19 +162,21 @@ def createspark(SM, SW):
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
 
+    return getTokens()
     # tokens
-    bashCommand = "ssh sparkmaster 'cat /home/ubuntu/.local/share/jupyter/runtime/*.json | grep token' > tokens"
-    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-    output, error = process.communicate()
+    # bashCommand = "ssh sparkmaster 'cat /home/ubuntu/.local/share/jupyter/runtime/*.json | grep token' > tokens"
+    # process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+    # output, error = process.communicate()
 
-    tokensPath =  os.getcwd()+'/tokens'
-    if os.path.isfile(tokensPath):
-        tokens = open(tokensPath)
-        print str(tokens.read())
-        tokens = str(tokens.read()) + "  tt"
-        return tokens
-    else:
-        sys.exit("tokens file is not in current working directory")
+
+    # tokensPath =  os.getcwd()+'/tokens'
+    # if os.path.isfile(tokensPath):
+    #     tokens = open(tokensPath)
+    #     print str(tokens.read())
+    #     tokens = str(tokens.read()) + "  tt"
+    #     return tokens
+    # else:
+    #     sys.exit("tokens file is not in current working directory")
 
 
 def createinstance(image_name, name, assign_fip):

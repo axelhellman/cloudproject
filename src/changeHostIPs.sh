@@ -29,7 +29,7 @@ ips=$(cut -d "=" -f 2 <<< $full)
 privSM=${ips:0:12}
 floatingSM=${ips:14:12}
 echo "salu2"
-echo "$floatingSM" >> floatingSM
+echo "$floatingSM" > floatingSM
 if [ -z "$privSM" ]
 then
   privSM='none'
