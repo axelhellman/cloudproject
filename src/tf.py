@@ -120,9 +120,10 @@ def getTokens():
     if os.path.isfile(floatPath) and os.path.isfile(tokensPath):
         floatIP = open(floatPath, 'r')
         tokens = open(tokensPath, 'r')
-        print "tokens: " + str(tokens.read()) #print
-        print "floatingIP " + str(floatIP.read()) #print
-        return "testing " + str(floatIP.read().replace('\n', '')) + " testing"
+        tokensContent = repr(tokens.read())
+        floatIPContent = repr(floatIP.read())
+        toUser = "Floating IP: " + floatIPContent + '\n' + "Tokens: " + tokensContent
+        return toUser
     elif not os.path.isfile(floatPath):
         sys.exit("floatingSM file is not in current working directory")
     else:
@@ -157,26 +158,13 @@ def createspark(SM, SW):
     print started_cluster
 
     # IPs
-
     bashCommand = "/home/ubuntu/changeHostIPs.sh"
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
 
-    return getTokens()
-    # tokens
-    # bashCommand = "ssh sparkmaster 'cat /home/ubuntu/.local/share/jupyter/runtime/*.json | grep token' > tokens"
-    # process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-    # output, error = process.communicate()
-
-
-    # tokensPath =  os.getcwd()+'/tokens'
-    # if os.path.isfile(tokensPath):
-    #     tokens = open(tokensPath)
-    #     print str(tokens.read())
-    #     tokens = str(tokens.read()) + "  tt"
-    #     return tokens
-    # else:
-    #     sys.exit("tokens file is not in current working directory")
+    # Tokens
+    res = getTokens()
+    return res
 
 
 def createinstance(image_name, name, assign_fip):
