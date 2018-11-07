@@ -117,7 +117,7 @@ def getTokens():
     tokensPath =  os.getcwd()+'/tokens'
     if os.path.isfile(tokensPath):
         tokens = open(tokensPath)
-        print str(tokens.read())
+        return str(tokens.read()) #print
     else:
         sys.exit("tokens file is not in current working directory")
 

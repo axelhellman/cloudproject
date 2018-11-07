@@ -18,17 +18,17 @@ def home():
 def create():
     amount = request.form['amount-workers']
     mess = " Started your cluster with " + amount + " workers..."
-    print mess
+    print (mess)
     res = createspark.delay(True,amount)
-    token=res.get()
-    touser = "Your cluster is up, here is your token: " + str(token)
+    #token=res.get()
+    #touser = "Your cluster is up, here is your token: " + str(token)
     return render_template("home.html", message=touser)
 
 @app.route('/resize', methods=['POST', 'GET'])
 def resize():
     amount = request.form['new-amount-workers']
     mess = "Resized your cluster to " + amount + " workers..."
-    print mess
+    print (mess)
     res = resizespark.delay(amount)
     result = res.get()
     return render_template("home.html", message=mess)
@@ -36,7 +36,7 @@ def resize():
 @app.route('/remove', methods=['POST', 'GET'])
 def remove():
     mess = "Your cluster has been removed"
-    print mess
+    print (mess)
     res = removespark.delay()
     result = res.get()
     return render_template("home.html", message=mess)
@@ -62,6 +62,13 @@ def inject():
         # process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
         # output, error = process.communicate()
         return render_template("home.html", message=mess)
+
+@app.route('/jupyter', methods=['POST', 'GET'])
+def jupyter():
+    result = getTokens.delay()
+    token = jsonify.(result)
+    mess ="Hello use this ip: and this token:%s" %()
+    return render_template("home.html", message=mess)
 
 
 if __name__ == '__main__':
