@@ -47,13 +47,19 @@ def resizespark(SW):
                 cw-=1
             current_workers = SW
             print("Remove workers")
-	    bashCommand = "ansible-playbook -s spark_deployment.yml"
-	    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-	    output, error = process.communicate()
+	   # bashCommand = "ansible-playbook -s spark_deployment.yml"
+	   # process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+	   # output, error = process.communicate()
         
     else:
         print("There is not a cluster yet")
 
+
+@app.task()
+def startqtl():
+     bashCommand = "ansible-playbook -s spark_deployment.yml"
+     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+     output, error = process.communicate()
 
 @app.task
 def removeinstance(name):
@@ -73,7 +79,7 @@ def removeinstance(name):
 
     server=nova.servers.find(name=name)
     server.delete()
-    print "Delete instance with name: " + name
+    #     print "Delete instance with name: " + name
     #     return True
     # else:
     #     print "There's no instance with name: " + name
@@ -114,18 +120,10 @@ def getTokens():
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
 
-    floatPath = os.getcwd()+'/floatingSM'
-    tokensPath = os.getcwd()+'/tokens'
-
-    if os.path.isfile(floatPath) and os.path.isfile(tokensPath):
-        floatIP = open(floatPath, 'r')
-        tokens = open(tokensPath, 'r')
-        tokensContent = repr(tokens.read())
-        floatIPContent = repr(floatIP.read())
-        toUser = "Floating IP: " + floatIPContent + '\n' + "Tokens: " + tokensContent
-        return toUser
-    elif not os.path.isfile(floatPath):
-        sys.exit("floatingSM file is not in current working directory")
+    tokensPath =  os.getcwd()+'/tokens'
+    if os.path.isfile(tokensPath):
+        tokens = open(tokensPath)
+        return str(tokens.read()) #print
     else:
         sys.exit("tokens file is not in current working directory")
 
@@ -158,13 +156,24 @@ def createspark(SM, SW):
     print started_cluster
 
     # IPs
+
     bashCommand = "/home/ubuntu/changeHostIPs.sh"
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
 
-    # Tokens
-    res = getTokens()
-    return res
+    # tokens
+   # bashCommand = "ssh sparkmaster 'cat /home/ubuntu/.local/share/jupyter/runtime/*.json | grep token' > tokens"
+   # process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+    #output, error = process.communicate()
+
+    #tokensPath =  os.getcwd()+'/tokens'
+    #if os.path.isfile(tokensPath):
+    #    tokens = open(tokensPath)
+    #    print str(tokens.read())
+    #    tokens = str(tokens.read()) + "  tt"
+    #    return tokens
+    #else:
+    #    sys.exit("tokens file is not in current working directory")
 
 
 def createinstance(image_name, name, assign_fip):
@@ -225,5 +234,3 @@ def createinstance(image_name, name, assign_fip):
         instance.add_floating_ip(floating_ip)#insert floating ip
 
     return "Instance: "+ instance.name +" is in " + inst_status + "state"
-
-
