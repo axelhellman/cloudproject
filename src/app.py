@@ -20,7 +20,7 @@ def create():
     mess = " Started your cluster with " + amount + " workers..."
     print (mess)
     res = createspark.delay(True,amount)
-    token=res.get()
+    token = res.get()
     touser = "Your cluster is up, here is your token: " + str(token)
     return render_template("home.html", message=touser)
 
@@ -65,11 +65,15 @@ def inject():
 
 @app.route('/jupyter', methods=['POST', 'GET'])
 def jupyter():
+    print "Running jupyter deployment script..."
     result = startqtl.delay()
+    print "Jupyter deployment DONE"
     res = result.get()
+
+    print "Obtaining the tokens..."
     result1 = getTokens.delay()
-    token = result.get()
-    mess ="Hello use this ip: and this token:%s" %(token)
+    mess = result1.get()
+    #mess ="Hello use this ip: and this token:%s" %(token)
     return render_template("home.html", message=mess)
 
 

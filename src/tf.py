@@ -55,12 +55,6 @@ def resizespark(SW):
         print("There is not a cluster yet")
 
 
-@app.task()
-def startqtl():
-     bashCommand = "ansible-playbook -s spark_deployment.yml"
-     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-     output, error = process.communicate()
-
 @app.task
 def removeinstance(name):
     # if name exists:
@@ -114,18 +108,30 @@ def sendFile(fileName):
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
 
+@app.task()
+def startqtl():
+     bashCommand = "ansible-playbook -s spark_deployment.yml"
+     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+     output, error = process.communicate()
+
 @app.task
 def getTokens():
-    bashCommand = "ssh sparkmaster 'cat /home/ubuntu/.local/share/jupyter/runtime/*.json | grep token' > tokens"
+    bashCommand = "ssh -o StrictHostKeyChecking=no sparkmaster 'cat /home/ubuntu/.local/share/jupyter/runtime/*.json | grep token' > tokens"
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
 
-    tokensPath =  os.getcwd()+'/tokens'
-    if os.path.isfile(tokensPath):
-        tokens = open(tokensPath)
-        return str(tokens.read()) #print
+    floatPath = os.getcwd()+'/floatingSM'
+    tokensPath = os.getcwd()+'/tokens'
+
+    if os.path.isfile(floatPath) and os.path.isfile(tokensPath):
+        floatIP = open(floatPath, 'r')
+        tokens = open(tokensPath, 'r')
+        tokensContent = repr(tokens.read())
+        floatIPContent = repr(floatIP.read())
+        toUser = "Floating IP: " + floatIPContent + "Tokens: " + tokensContent
+        return toUser
     else:
-        sys.exit("tokens file is not in current working directory")
+    	return "FILE NOT FOUND"
 
 @app.task
 def createspark(SM, SW):
