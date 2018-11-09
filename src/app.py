@@ -31,6 +31,7 @@ def resize():
     print (mess)
     res = resizespark.delay(amount)
     result = res.get()
+    print "resize done"
     return render_template("home.html", message=mess)
 
 @app.route('/remove', methods=['POST', 'GET'])
@@ -68,8 +69,6 @@ def jupyter():
     print "Running jupyter deployment script..."
     result = startqtl.delay()
     print "Jupyter deployment DONE"
-    res = result.get()
-
     print "Obtaining the tokens..."
     result1 = getTokens.delay()
     mess = result1.get()
