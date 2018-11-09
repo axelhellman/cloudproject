@@ -132,7 +132,7 @@ echo "Written to local /etc/ansible/hosts file"
 
 # ansible-playbook -s spark_deployment.yml
 
-
+rm ~/.ssh/known_hosts
 ############ Manually get the floating IPs ###############
 
 # read -p "Ansible Master Floating IP: " floatingAM

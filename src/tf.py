@@ -47,12 +47,17 @@ def resizespark(SW):
                 cw-=1
             current_workers = SW
             print("Remove workers")
+
+        bashCommand = "/home/ubuntu/changeHostIPs.sh"
+        process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+        output, error = process.communicate()
        # bashCommand = "ansible-playbook -s spark_deployment.yml"
        # process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
        # output, error = process.communicate()
         
     else:
         print("There is not a cluster yet")
+
 
 
 @app.task
