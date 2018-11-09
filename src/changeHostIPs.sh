@@ -27,9 +27,7 @@ fi
 full=$(grep $nameSM -r serverlist)
 ips=$(cut -d "=" -f 2 <<< $full)
 privSM=${ips:0:12}
-floatingSM=${ips:14:12}
-echo "salu2"
-echo "$floatingSM"
+floatingSM=${ips:14:13}
 echo "$floatingSM" > floatingSM
 if [ -z "$privSM" ]
 then
@@ -38,6 +36,7 @@ fi
 
 # Variable workers
 hostContent=$"127.0.0.1 localhost
+
 $privA ansible-node
 $privSM sparkmaster"
 
@@ -45,6 +44,7 @@ hostAnsibleContent=$"ansible-node ansible_ssh_host=$privA
 sparkmaster  ansible_ssh_host=$privSM"
 
 hostAnsibleContentSecond=$"
+
 [configNode]
 ansible-node ansible_connection=local ansible_user=ubuntu
 
@@ -72,7 +72,7 @@ while [ $COUNTER -lt 10 ]; do
     # etc/ansible/hosts file
     singleLine="sparkworker$COUNTER ansible_ssh_host=$privSW"
     singleLineSecond="[sparkworker$COUNTER]
-    sparkworker$COUNTER ansible_connection=ssh ansible_user=ubuntu"
+sparkworker$COUNTER ansible_connection=ssh ansible_user=ubuntu"
     hostAnsibleContent=${hostAnsibleContent}'\n'${singleLine}
     hostAnsibleContentSecond=${hostAnsibleContentSecond}'\n'${singleLineSecond}
   fi
@@ -82,6 +82,7 @@ done
 ######################/etc/hosts file########################
 
 hostContentEnd="
+
 # The following lines are desirable for IPv6 capable hosts
 ::1 ip6-localhost ip6-loopback
 fe00::0 ip6-localnet
@@ -102,15 +103,22 @@ echo "Filtered IPs from list"
 sudo cp hostFile /etc/hosts || true
 echo "Written to local /etc/hosts file"
 
+
+echo "IPS:    
+" > allIPslist
+n=0
 for i in "${floatingIPs[@]}"
 do
-   # echo "salu2: "
-   # echo "$i"
-   scp -o StrictHostKeyChecking=no hostFile ubuntu@"$i":/etc/hosts
+  let n=n+1
+  # echo "salu2: "
+  echo "$i" >> allIPslist
+  nameWorker="ubuntu@$i"
+  echo "$nameWorker"
+  scp -o StrictHostKeyChecking=no hostFile "$nameWorker":/etc/hosts
 done
-echo "Written to remote /etc/hosts files (SM and SW)"
+echo "Written to remote /etc/hosts files (workers)"
 
-scp -o StrictHostKeyChecking=no hostFile ubuntu@$floatingSM:/etc/hosts
+scp -o StrictHostKeyChecking=no hostFile sparkmaster:/etc/hosts
 echo "Written to remote /etc/hosts sparkmaster file"
 
 
@@ -122,7 +130,7 @@ echo -e "$hostAnsibleContent$hostAnsibleContentSecond" > ansibleHostsFile
 sudo cp ansibleHostsFile /etc/ansible/hosts || true
 echo "Written to local /etc/ansible/hosts file"
 
-ansible-playbook -s spark_deployment.yml
+# ansible-playbook -s spark_deployment.yml
 
 
 ############ Manually get the floating IPs ###############

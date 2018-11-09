@@ -21,7 +21,7 @@ def create():
     print (mess)
     res = createspark.delay(True,amount)
     token = res.get()
-    touser = "Your cluster is up, here is your token: " + str(token)
+    touser = "Your cluster is up"
     return render_template("home.html", message=touser)
 
 @app.route('/resize', methods=['POST', 'GET'])

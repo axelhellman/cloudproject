@@ -47,9 +47,9 @@ def resizespark(SW):
                 cw-=1
             current_workers = SW
             print("Remove workers")
-	   # bashCommand = "ansible-playbook -s spark_deployment.yml"
-	   # process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-	   # output, error = process.communicate()
+       # bashCommand = "ansible-playbook -s spark_deployment.yml"
+       # process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+       # output, error = process.communicate()
         
     else:
         print("There is not a cluster yet")
@@ -57,6 +57,7 @@ def resizespark(SW):
 
 @app.task
 def removeinstance(name):
+    print ("trying to remove instance with name" + name)
     # if name exists:
     loader = loading.get_plugin_loader('password')
     auth = loader.load_from_options(auth_url=env['OS_AUTH_URL'],
@@ -71,7 +72,7 @@ def removeinstance(name):
     nova = client.Client('2.1', session=sess)
     print "user authorization completed."
 
-    server=nova.servers.find(name=name)
+    server = nova.servers.find(name=name)
     server.delete()
     #     print "Delete instance with name: " + name
     #     return True
@@ -86,6 +87,7 @@ def removespark():
     # Remove sparkmaster
     name = "acc20-sparkmaster"
     removeinstance(name)
+    print "Removed sparkmaster"
 
     # Remove sparkworkers
     while current_workers > 0:
@@ -110,9 +112,13 @@ def sendFile(fileName):
 
 @app.task()
 def startqtl():
-     bashCommand = "ansible-playbook -s spark_deployment.yml"
-     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-     output, error = process.communicate()
+    bashCommand = "/home/ubuntu/changeHostIPs.sh"
+    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+    output, error = process.communicate()
+
+    bashCommand = "ansible-playbook -s spark_deployment.yml"
+    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+    output, error = process.communicate()
 
 @app.task
 def getTokens():
@@ -131,7 +137,7 @@ def getTokens():
         toUser = "Floating IP: " + floatIPContent + "Tokens: " + tokensContent
         return toUser
     else:
-    	return "FILE NOT FOUND"
+        return "FILE NOT FOUND"
 
 @app.task
 def createspark(SM, SW):
@@ -162,24 +168,10 @@ def createspark(SM, SW):
     print started_cluster
 
     # IPs
-
+    time.sleep(5)
     bashCommand = "/home/ubuntu/changeHostIPs.sh"
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
-
-    # tokens
-   # bashCommand = "ssh sparkmaster 'cat /home/ubuntu/.local/share/jupyter/runtime/*.json | grep token' > tokens"
-   # process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-    #output, error = process.communicate()
-
-    #tokensPath =  os.getcwd()+'/tokens'
-    #if os.path.isfile(tokensPath):
-    #    tokens = open(tokensPath)
-    #    print str(tokens.read())
-    #    tokens = str(tokens.read()) + "  tt"
-    #    return tokens
-    #else:
-    #    sys.exit("tokens file is not in current working directory")
 
 
 def createinstance(image_name, name, assign_fip):
